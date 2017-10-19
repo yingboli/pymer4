@@ -189,15 +189,16 @@
 <li><strong>fitted</strong> (<em>bool</em>) – whether model has been fit</li>
 <li><strong>formula</strong> (<em>str</em>) – model formula</li>
 <li><strong>data</strong> (<em>pandas.core.frame.DataFrame</em>) – model copy of input data</li>
-<li><strong>ngrps</strong> (<em>float</em>) – number of groups recognized by lmer</li>
+<li><strong>grps</strong> (<em>dict</em>) – groups and number of observations per groups recognized by lmer</li>
 <li><strong>AIC</strong> (<em>float</em>) – model akaike information criterion</li>
 <li><strong>logLike</strong> (<em>float</em>) – model Log-likelihood</li>
 <li><strong>family</strong> (<em>string</em>) – model family</li>
-<li><strong>ranef</strong> (<em>pandas.core.frame.DataFrame</em>) – cluster-level differences from population parameters, i.e. difference between coefs and fixefs</li>
-<li><strong>fixef</strong> (<em>pandas.core.frame.DataFrame</em>) – cluster-level parameters</li>
-<li><strong>coefs</strong> (<em>pandas.core.frame.DataFrame</em>) – model summary table of population parameters</li>
+<li><strong>ranef</strong> (<em>pandas.core.frame.DataFrame/list</em>) – cluster-level differences from population parameters, i.e. difference between coefs and fixefs; returns list if multiple cluster variables are used to specify random effects (e.g. subjects and items)</li>
+<li><strong>fixef</strong> (<em>pandas.core.frame.DataFrame/list</em>) – cluster-level parameters; returns list if multiple cluster variables are used to specify random effects (e.g. subjects and items)</li>
+<li><strong>coefs</strong> (<em>pandas.core.frame.DataFrame/list</em>) – model summary table of population parameters</li>
 <li><strong>resid</strong> (<em>numpy.ndarray</em>) – model residuals</li>
 <li><strong>fits</strong> (<em>numpy.ndarray</em>) – model fits/predictions</li>
+<li><strong>model_obj</strong> (<em>lmer model</em>) – rpy2 lmer model object</li>
 </ul>
 </td>
 </tr>
@@ -245,6 +246,7 @@
 <li><strong>plot_fixef</strong> (<em>bool</em>) – plot population effect fit of param?; default True</li>
 <li><strong>plot_ci</strong> (<em>bool</em>) – plot computed ci’s of population effect?; default True</li>
 <li><strong>grps</strong> (<em>list</em>) – plot specific group fits only; must correspond to index values in model.fixef</li>
+<li><strong>ax</strong> (<em>matplotlib.axes.Axes</em>) – axis handle for an existing plot; if provided will ensure that random parameter plots appear <em>behind</em> all other plot objects.</li>
 </ul>
 </td>
 </tr>
@@ -253,6 +255,34 @@
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pymer4.models.Lmer.predict">
+<code class="descname">predict</code><span class="sig-paren">(</span><em>data</em>, <em>use_rfx=False</em>, <em>pred_type='response'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymer4/models.html#Lmer.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymer4.models.Lmer.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make predictions given new data. Input must be a dataframe that contains the same columns as the model.matrix excluding the intercept (i.e. all the predictor variables used to fit the model). If using random effects to make predictions, input data must also contain a column for the grouping factors that were used to fit the model random effects terms.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data</strong> (<em>pandas.core.frame.DataFrame</em>) – input data to make predictions on</li>
+<li><strong>use_rfx</strong> (<em>bool</em>) – whether to condition on random effects when making predictions</li>
+<li><strong>pred_type</strong> (<em>str</em>) – whether the prediction should be on the ‘response’ scale (default); or on the ‘link’ scale of the predictors passed through the link function (e.g. log-odds scale in a logit model instead of probability values)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">numpy.ndarray of predictions</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pymer4.models.Lmer.summary">
+<code class="descname">summary</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymer4/models.html#Lmer.summary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymer4.models.Lmer.summary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Summarize the output of a fitted model.</p>
 </dd></dl>
 
 </dd></dl>
