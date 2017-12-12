@@ -9,3 +9,4 @@ build/*
 .imdone/*
 dist/*
 *.egg*
+*.tox

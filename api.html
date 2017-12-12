@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>API Reference &mdash; pymer4 0.2.1 documentation</title>
+  <title>API Reference &mdash; pymer4 0.2.2 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="pymer4 0.2.1 documentation" href="index.html"/>
+    <link rel="top" title="pymer4 0.2.2 documentation" href="index.html"/>
         <link rel="prev" title="Lme4 Random Effects Cheat Sheet" href="rfx_cheatsheet.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.2.1
+                0.2.2
               </div>
             
           
@@ -328,20 +328,25 @@
 <dt id="pymer4.models.Lm.fit">
 <code class="descname">fit</code><span class="sig-paren">(</span><em>robust=False</em>, <em>conf_int='standard'</em>, <em>permute=None</em>, <em>summarize=True</em>, <em>verbose=False</em>, <em>n_boot=500</em>, <em>n_jobs=-1</em>, <em>n_lags=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymer4/models.html#Lm.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymer4.models.Lm.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit a variety of OLS models. By default will fit a model that makes parametric assumptions (under a t-distribution) replicating the output of software like R. 95% confidence intervals (CIs) are also estimated parametrically by default. However, empirical bootstrapping can also be used to compute CIs; this procedure resamples with replacement from the data themselves, not residuals or data generated from fitted parameters.</p>
-<p>Alternatively, OLS robust to heteroscedasticity can be fit by computing sandwich standard error estimates. This is similar to Stata’s robust routine. Robust estimators include:
-‘hc0’: Huber (1980) original sandwich estimator
-‘hc3’: MacKinnon and White (1985) HC3 sandwich estimator. Provides more robustness in smaller samples than hc0, Long &amp; Ervin (2000)
-‘hac’: Newey-West (1987) estimator for robustness to heteroscedasticity as well as serial auto-correlation at given lags.</p>
+<p>Alternatively, OLS robust to heteroscedasticity can be fit by computing sandwich standard error estimates. This is similar to Stata’s robust routine.
+Robust estimators include:</p>
+<blockquote>
+<div><ul class="simple">
+<li>‘hc0’: Huber (1980) original sandwich estimator</li>
+<li>‘hc3’: MacKinnon and White (1985) HC3 sandwich estimator; provides more robustness in smaller samples than hc0, Long &amp; Ervin (2000)</li>
+<li>‘hac’: Newey-West (1987) estimator for robustness to heteroscedasticity as well as serial auto-correlation at given lags.</li>
+</ul>
+</div></blockquote>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>robust</strong> (<em>bool/str</em>) – whether heteroscedasticity robust s.e.’s‘ and optionally which estimator type to use (‘hc0’,’hc3’,’hac’). If robust = True, default robust estimator is ‘hc0’; default False</li>
+<li><strong>robust</strong> (<em>bool/str</em>) – whether to use heteroscedasticity robust s.e.and optionally which estimator type to use (‘hc0’,’hc3’,’hac’). If robust = True, default robust estimator is ‘hc0’; default False</li>
 <li><strong>conf_int</strong> (<em>str</em>) – whether confidence intervals should be computed through bootstrap (‘boot’) or assuming a t-distribution (‘standard’); default ‘standard’</li>
 <li><strong>permute</strong> (<em>int</em>) – if non-zero, computes parameter significance tests by permuting t-stastics rather than parametrically; works with robust estimators</li>
 <li><strong>summarize</strong> (<em>bool</em>) – whether to print a model summary after fitting; default True</li>
-<li><strong>verbose</strong> (<em>bool</em>) – whether to print which model and confidence interval type are being fitted</li>
+<li><strong>verbose</strong> (<em>bool</em>) – whether to print which model, standard error, confidence interval, and inference type are being fitted</li>
 <li><strong>n_boot</strong> (<em>int</em>) – how many bootstrap resamples to use for confidence intervals (ignored unless conf_int=’boot’)</li>
 <li><strong>n_jobs</strong> (<em>int</em>) – number of cores for parallelizing bootstrapping or permutations; default all cores</li>
 <li><strong>n_lags</strong> (<em>int</em>) – number of lags for robust estimator type ‘hac’ (ignored unless robust=’hac’); default 1</li>
@@ -419,7 +424,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.2.1',
+            VERSION:'0.2.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pymer4.models &mdash; pymer4 0.2.1 documentation</title>
+  <title>pymer4.models &mdash; pymer4 0.2.2 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="pymer4 0.2.1 documentation" href="../../index.html"/>
+    <link rel="top" title="pymer4 0.2.2 documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.2.1
+                0.2.2
               </div>
             
           
@@ -181,7 +181,6 @@
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">from</span> <span class="nn">joblib</span> <span class="k">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
 <span class="kn">from</span> <span class="nn">pymer4.utils</span> <span class="k">import</span> <span class="p">(</span><span class="n">_sig_stars</span><span class="p">,</span>
-                          <span class="n">_robust_estimator</span><span class="p">,</span>
                           <span class="n">_chunk_boot_ols_coefs</span><span class="p">,</span>
                           <span class="n">_chunk_perm_ols</span><span class="p">,</span>
                           <span class="n">_ols</span><span class="p">,</span>
@@ -558,7 +557,7 @@
         <span class="k">assert</span> <span class="nb">all</span><span class="p">([</span><span class="n">col</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">required_cols</span><span class="p">]),</span> <span class="s2">&quot;Column names do not match all fixed effects model terms!&quot;</span>
 
         <span class="k">if</span> <span class="n">use_rfx</span><span class="p">:</span>
-            <span class="n">required_cols</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">required_cols</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">grps</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            <span class="n">required_cols</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">required_cols</span><span class="p">)</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grps</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
             <span class="k">assert</span> <span class="nb">all</span><span class="p">([</span><span class="n">col</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">required_cols</span><span class="p">]),</span> <span class="s2">&quot;Column names are missing random effects model grouping terms!&quot;</span>
 
             <span class="n">re_form</span> <span class="o">=</span> <span class="s1">&#39;NULL&#39;</span>
@@ -749,18 +748,19 @@
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Fit a variety of OLS models. By default will fit a model that makes parametric assumptions (under a t-distribution) replicating the output of software like R. 95% confidence intervals (CIs) are also estimated parametrically by default. However, empirical bootstrapping can also be used to compute CIs; this procedure resamples with replacement from the data themselves, not residuals or data generated from fitted parameters.</span>
 
-<span class="sd">        Alternatively, OLS robust to heteroscedasticity can be fit by computing sandwich standard error estimates. This is similar to Stata&#39;s robust routine. Robust estimators include:</span>
-<span class="sd">        &#39;hc0&#39;: Huber (1980) original sandwich estimator</span>
-<span class="sd">        &#39;hc3&#39;: MacKinnon and White (1985) HC3 sandwich estimator. Provides more robustness in smaller samples than hc0, Long &amp; Ervin (2000)</span>
-<span class="sd">        &#39;hac&#39;: Newey-West (1987) estimator for robustness to heteroscedasticity as well as serial auto-correlation at given lags.</span>
+<span class="sd">        Alternatively, OLS robust to heteroscedasticity can be fit by computing sandwich standard error estimates. This is similar to Stata&#39;s robust routine.</span>
+<span class="sd">        Robust estimators include:</span>
+<span class="sd">            - &#39;hc0&#39;: Huber (1980) original sandwich estimator</span>
+<span class="sd">            - &#39;hc3&#39;: MacKinnon and White (1985) HC3 sandwich estimator; provides more robustness in smaller samples than hc0, Long &amp; Ervin (2000)</span>
+<span class="sd">            - &#39;hac&#39;: Newey-West (1987) estimator for robustness to heteroscedasticity as well as serial auto-correlation at given lags.</span>
 
 <span class="sd">        Args:</span>
 
-<span class="sd">            robust (bool/str): whether heteroscedasticity robust s.e.&#39;s&#39; and optionally which estimator type to use (&#39;hc0&#39;,&#39;hc3&#39;,&#39;hac&#39;). If robust = True, default robust estimator is &#39;hc0&#39;; default False</span>
+<span class="sd">            robust (bool/str): whether to use heteroscedasticity robust s.e.and optionally which estimator type to use (&#39;hc0&#39;,&#39;hc3&#39;,&#39;hac&#39;). If robust = True, default robust estimator is &#39;hc0&#39;; default False</span>
 <span class="sd">            conf_int (str): whether confidence intervals should be computed through bootstrap (&#39;boot&#39;) or assuming a t-distribution (&#39;standard&#39;); default &#39;standard&#39;</span>
 <span class="sd">            permute (int): if non-zero, computes parameter significance tests by permuting t-stastics rather than parametrically; works with robust estimators</span>
 <span class="sd">            summarize (bool): whether to print a model summary after fitting; default True</span>
-<span class="sd">            verbose (bool): whether to print which model and confidence interval type are being fitted</span>
+<span class="sd">            verbose (bool): whether to print which model, standard error, confidence interval, and inference type are being fitted</span>
 <span class="sd">            n_boot (int): how many bootstrap resamples to use for confidence intervals (ignored unless conf_int=&#39;boot&#39;)</span>
 <span class="sd">            n_jobs (int): number of cores for parallelizing bootstrapping or permutations; default all cores</span>
 <span class="sd">            n_lags (int): number of lags for robust estimator type &#39;hac&#39; (ignored unless robust=&#39;hac&#39;); default 1</span>
@@ -822,8 +822,9 @@
 <span class="p">)(</span><span class="n">dat</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span><span class="n">formula</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">formula</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="n">seeds</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_boot</span><span class="p">))</span>
 
             <span class="n">boot_betas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">boot_betas</span><span class="p">)</span>
-            <span class="n">ci_u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">apply_along_axis</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">boot_betas</span><span class="p">,</span><span class="mf">97.5</span><span class="p">)</span>
-            <span class="n">ci_l</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">apply_along_axis</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">boot_betas</span><span class="p">,</span><span class="mf">2.5</span><span class="p">)</span>
+            <span class="n">ci_u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">boot_betas</span><span class="p">,</span><span class="mf">97.5</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">ci_u</span><span class="p">)</span>
+            <span class="n">ci_l</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">boot_betas</span><span class="p">,</span><span class="mf">2.5</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># Otherwise we&#39;re doing parametric CIs</span>
@@ -888,7 +889,7 @@
 
         <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">fitted</span> <span class="o">==</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;Model must be fitted to generate summary!&quot;</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Formula: </span><span class="si">{}</span><span class="se">\t</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">formula</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Formula: </span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">formula</span><span class="p">))</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Std-errors: </span><span class="si">{}</span><span class="se">\t</span><span class="s2">CIs: </span><span class="si">{}</span><span class="s2"> 95%</span><span class="se">\t</span><span class="s2">Inference: </span><span class="si">{}</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">se_type</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">ci_type</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">sig_type</span><span class="p">))</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Number of observations: </span><span class="si">%s</span><span class="se">\t</span><span class="s2"> R^2: </span><span class="si">%.3f</span><span class="se">\t</span><span class="s2"> R^2_adj: </span><span class="si">%.3f</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">rsquared</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">rsquared_adj</span><span class="p">))</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Log-likelihood: </span><span class="si">%.3f</span><span class="s2"> </span><span class="se">\t</span><span class="s2"> AIC: </span><span class="si">%.3f</span><span class="se">\t</span><span class="s2"> BIC: </span><span class="si">%.3f</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">logLike</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">AIC</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">BIC</span><span class="p">))</span>
@@ -930,7 +931,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.2.1',
+            VERSION:'0.2.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
