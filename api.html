@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>API Reference &mdash; pymer4 0.2.0 documentation</title>
+  <title>API Reference &mdash; pymer4 0.2.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="pymer4 0.2.0 documentation" href="index.html"/>
+    <link rel="top" title="pymer4 0.2.1 documentation" href="index.html"/>
         <link rel="prev" title="Lme4 Random Effects Cheat Sheet" href="rfx_cheatsheet.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.2.0
+                0.2.1
               </div>
             
           
@@ -199,6 +199,7 @@
 <li><strong>resid</strong> (<em>numpy.ndarray</em>) – model residuals</li>
 <li><strong>fits</strong> (<em>numpy.ndarray</em>) – model fits/predictions</li>
 <li><strong>model_obj</strong> (<em>lmer model</em>) – rpy2 lmer model object</li>
+<li><strong>factors</strong> (<em>dict</em>) – factors used to fit the model if any</li>
 </ul>
 </td>
 </tr>
@@ -206,7 +207,7 @@
 </table>
 <dl class="method">
 <dt id="pymer4.models.Lmer.fit">
-<code class="descname">fit</code><span class="sig-paren">(</span><em>conf_int='Wald'</em>, <em>factors=None</em>, <em>ordered=False</em>, <em>summarize=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymer4/models.html#Lmer.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymer4.models.Lmer.fit" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fit</code><span class="sig-paren">(</span><em>conf_int='Wald'</em>, <em>factors=None</em>, <em>ordered=False</em>, <em>summarize=True</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymer4/models.html#Lmer.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymer4.models.Lmer.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Main method for fitting model object. Will modify the model’s data attribute to add columns for residuals and fits for convenience.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -217,6 +218,7 @@
 <li><strong>factors</strong> (<em>dict</em>) – col names (keys) to treat as dummy-coded factors with levels specified by unique values (vals). First level is always reference, e.g. {‘Col1’:[‘A’,’B’,’C’]}</li>
 <li><strong>ordered</strong> (<em>bool</em>) – whether factors should be treated as ordered polynomial contrasts; this will parameterize a model with K-1 orthogonal polynomial regressors beginning with a linear contrast based on the factor order provided; default is False</li>
 <li><strong>summarize</strong> (<em>bool</em>) – whether to print a model summary after fitting; default is True</li>
+<li><strong>verbose</strong> (<em>bool</em>) – whether to print when and which model and confidence interval are being fitted</li>
 </ul>
 </td>
 </tr>
@@ -239,7 +241,7 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>param</strong> (<em>str</em>) – model parameter (column name) to plot conditioned at mean of all other model params</li>
+<li><strong>param</strong> (<em>str</em>) – model parameter (column name) to plot</li>
 <li><strong>figsize</strong> (<em>tup</em>) – matplotlib desired figsize</li>
 <li><strong>xlabel</strong> (<em>str</em>) – x-axis label</li>
 <li><strong>ylabel</strong> (<em>str</em>) – y-axis label</li>
@@ -282,6 +284,83 @@
 <dl class="method">
 <dt id="pymer4.models.Lmer.summary">
 <code class="descname">summary</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymer4/models.html#Lmer.summary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymer4.models.Lmer.summary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Summarize the output of a fitted model.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pymer4.models.Lm">
+<em class="property">class </em><code class="descclassname">pymer4.models.</code><code class="descname">Lm</code><span class="sig-paren">(</span><em>formula</em>, <em>data</em>, <em>family='gaussian'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymer4/models.html#Lm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymer4.models.Lm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model class to perform OLS regression. Formula specification works just like in R based on columns of a dataframe. Formulae are parsed by patsy which makes it easy to utilize specifiy columns as factors. This is <strong>different</strong> from Lmer. See patsy for more information on the different use cases.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>formula</strong> (<em>str</em>) – Complete lm-style model formula</li>
+<li><strong>data</strong> (<em>pandas.core.frame.DataFrame</em>) – input data</li>
+<li><strong>family</strong> (<em>string</em>) – what distribution family (i.e.) link function to use for the generalized model; default is gaussian (linear model)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Variables:</th><td class="field-body"><ul class="first last simple">
+<li><strong>fitted</strong> (<em>bool</em>) – whether model has been fit</li>
+<li><strong>formula</strong> (<em>str</em>) – model formula</li>
+<li><strong>data</strong> (<em>pandas.core.frame.DataFrame</em>) – model copy of input data</li>
+<li><strong>grps</strong> (<em>dict</em>) – groups and number of observations per groups recognized by lmer</li>
+<li><strong>AIC</strong> (<em>float</em>) – model akaike information criterion</li>
+<li><strong>logLike</strong> (<em>float</em>) – model Log-likelihood</li>
+<li><strong>family</strong> (<em>string</em>) – model family</li>
+<li><strong>ranef</strong> (<em>pandas.core.frame.DataFrame/list</em>) – cluster-level differences from population parameters, i.e. difference between coefs and fixefs; returns list if multiple cluster variables are used to specify random effects (e.g. subjects and items)</li>
+<li><strong>fixef</strong> (<em>pandas.core.frame.DataFrame/list</em>) – cluster-level parameters; returns list if multiple cluster variables are used to specify random effects (e.g. subjects and items)</li>
+<li><strong>coefs</strong> (<em>pandas.core.frame.DataFrame/list</em>) – model summary table of population parameters</li>
+<li><strong>resid</strong> (<em>numpy.ndarray</em>) – model residuals</li>
+<li><strong>fits</strong> (<em>numpy.ndarray</em>) – model fits/predictions</li>
+<li><strong>model_obj</strong> (<em>lmer model</em>) – rpy2 lmer model object</li>
+<li><strong>factors</strong> (<em>dict</em>) – factors used to fit the model if any</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="pymer4.models.Lm.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>robust=False</em>, <em>conf_int='standard'</em>, <em>permute=None</em>, <em>summarize=True</em>, <em>verbose=False</em>, <em>n_boot=500</em>, <em>n_jobs=-1</em>, <em>n_lags=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymer4/models.html#Lm.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymer4.models.Lm.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit a variety of OLS models. By default will fit a model that makes parametric assumptions (under a t-distribution) replicating the output of software like R. 95% confidence intervals (CIs) are also estimated parametrically by default. However, empirical bootstrapping can also be used to compute CIs; this procedure resamples with replacement from the data themselves, not residuals or data generated from fitted parameters.</p>
+<p>Alternatively, OLS robust to heteroscedasticity can be fit by computing sandwich standard error estimates. This is similar to Stata’s robust routine. Robust estimators include:
+‘hc0’: Huber (1980) original sandwich estimator
+‘hc3’: MacKinnon and White (1985) HC3 sandwich estimator. Provides more robustness in smaller samples than hc0, Long &amp; Ervin (2000)
+‘hac’: Newey-West (1987) estimator for robustness to heteroscedasticity as well as serial auto-correlation at given lags.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>robust</strong> (<em>bool/str</em>) – whether heteroscedasticity robust s.e.’s‘ and optionally which estimator type to use (‘hc0’,’hc3’,’hac’). If robust = True, default robust estimator is ‘hc0’; default False</li>
+<li><strong>conf_int</strong> (<em>str</em>) – whether confidence intervals should be computed through bootstrap (‘boot’) or assuming a t-distribution (‘standard’); default ‘standard’</li>
+<li><strong>permute</strong> (<em>int</em>) – if non-zero, computes parameter significance tests by permuting t-stastics rather than parametrically; works with robust estimators</li>
+<li><strong>summarize</strong> (<em>bool</em>) – whether to print a model summary after fitting; default True</li>
+<li><strong>verbose</strong> (<em>bool</em>) – whether to print which model and confidence interval type are being fitted</li>
+<li><strong>n_boot</strong> (<em>int</em>) – how many bootstrap resamples to use for confidence intervals (ignored unless conf_int=’boot’)</li>
+<li><strong>n_jobs</strong> (<em>int</em>) – number of cores for parallelizing bootstrapping or permutations; default all cores</li>
+<li><strong>n_lags</strong> (<em>int</em>) – number of lags for robust estimator type ‘hac’ (ignored unless robust=’hac’); default 1</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">R style summary() table</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">dataframe</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pymer4.models.Lm.summary">
+<code class="descname">summary</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymer4/models.html#Lm.summary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymer4.models.Lm.summary" title="Permalink to this definition">¶</a></dt>
 <dd><p>Summarize the output of a fitted model.</p>
 </dd></dl>
 
@@ -340,7 +419,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.2.0',
+            VERSION:'0.2.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

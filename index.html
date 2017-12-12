@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Pymer4 &mdash; pymer4 0.2.0 documentation</title>
+  <title>Pymer4 &mdash; pymer4 0.2.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="pymer4 0.2.0 documentation" href="#"/>
+    <link rel="top" title="pymer4 0.2.1 documentation" href="#"/>
         <link rel="next" title="Basic Usage Guide" href="usage.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.2.0
+                0.2.1
               </div>
             
           
@@ -167,17 +167,35 @@
             
   <div class="section" id="pymer4">
 <h1>Pymer4<a class="headerlink" href="#pymer4" title="Permalink to this headline">¶</a></h1>
-<p>Love mixed-modeling using <a class="reference external" href="https://cran.r-project.org/web/packages/lme4/index.html">lme4</a> in R, but prefer to work in the scientific Python ecosystem? This this package has got you covered! It’s a small convenience package wrapping the basic functionality of lme4 for compatibility with python. (<em>Currently this only include linear and logit models</em>)</p>
+<p>Love multi-level-modeling using <a class="reference external" href="https://cran.r-project.org/web/packages/lme4/index.html">lme4</a> in R, but prefer to work in the scientific Python ecosystem? This this package has got you covered! It’s a small convenience package wrapping the basic functionality of lme4 for compatibility with python. (<em>Currently this only include linear and logistic multi-level models</em>)</p>
 <p>This package’s main purpose is to provide a clean interface that hides the back-and-forth code required when moving between R and Python. In other words a user can work completely in Python, never having to deal with R, but get (most) of lme4’s goodness. Behind the scenes this package simply uses <a class="reference external" href="https://rpy2.readthedocs.io/en/version_2.8.x/">rpy2</a> to pass objects between languages, compute what’s needed, parse everything, and convert to Python types (e.g. numpy arrays, pandas dataframes, etc).</p>
+<p>This package can also fit standard regression models with a few extra bells and whistles compared to R’s <code class="code docutils literal"><span class="pre">lm()</span></code> (<em>Currently this only includes linear models</em>)</p>
+<p>TL;DR This package is your new <em>simple</em> Pythonic drop-in replacement for <code class="code docutils literal"><span class="pre">lm()</span></code> or <code class="code docutils literal"><span class="pre">glmer()</span></code> in R.</p>
 <div class="section" id="features">
 <h2>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h2>
 <p>This package has some extra goodies to make life a bit easier, namely:</p>
-<ul class="simple">
+<ul>
+<li><p class="first">For multi-level models (i.e. <code class="code docutils literal"><span class="pre">glmer()</span></code>):</p>
+<blockquote>
+<div><ul class="simple">
 <li>Automatic inclusion of p-values in model output using <a class="reference external" href="https://cran.r-project.org/web/packages/lmerTest/index.html">lmerTest</a></li>
 <li>Automatic inclusion of confidence intervals in model output</li>
 <li>Automatic conversion and calculation of <em>odds-ratios</em> and <em>probabilities</em> for logit models</li>
 <li>Easy access to model fits, residuals, and random effects as pandas dataframes</li>
 <li>Random effects plotting using seaborn</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">For standard linear models (i.e. <code class="code docutils literal"><span class="pre">lm()</span></code>)</p>
+<blockquote>
+<div><ul class="simple">
+<li>Automatic inclusion of confidence intervals in model output</li>
+<li>Easy computation of empirically bootstrapped 95% confidence intervals</li>
+<li>Easy computation of heteroscedasticity or auto-correlation robust ‘sandwich estimators’ for standard errors (<em>note: these are not the same as auto-regressive models</em>)</li>
+<li>Permutation tests on model parameters</li>
+</ul>
+</div></blockquote>
+</li>
 </ul>
 </div>
 <div class="section" id="installation">
@@ -201,7 +219,8 @@
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Basic Usage Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#estimate-a-simple-linear-model">Estimate a simple linear model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#estimate-a-standard-regression-model">Estimate a standard regression model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#estimate-a-multi-level-model">Estimate a multi-level model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="usage.html#inspect-random-effects">Inspect random effects</a></li>
 <li class="toctree-l2"><a class="reference internal" href="usage.html#inspect-overall-fit">Inspect overall fit</a></li>
 </ul>
@@ -214,6 +233,8 @@
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="categorical.html">Categorical Predictors</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="categorical.html#standard-regression-models">Standard Regression Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="categorical.html#multi-level-models">Multi-level Models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="categorical.html#dummy-coding-factors">Dummy coding factors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="categorical.html#polynomial-contrast-coding">Polynomial contrast coding</a></li>
 <li class="toctree-l2"><a class="reference internal" href="categorical.html#custom-parameterizations">Custom parameterizations</a></li>
@@ -284,7 +305,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.2.0',
+            VERSION:'0.2.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

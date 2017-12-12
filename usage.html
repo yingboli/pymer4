@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Basic Usage Guide &mdash; pymer4 0.2.0 documentation</title>
+  <title>Basic Usage Guide &mdash; pymer4 0.2.1 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="pymer4 0.2.0 documentation" href="index.html"/>
+    <link rel="top" title="pymer4 0.2.1 documentation" href="index.html"/>
         <link rel="next" title="Categorical Predictors" href="categorical.html"/>
         <link rel="prev" title="Pymer4" href="index.html"/> 
 
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.2.0
+                0.2.1
               </div>
             
           
@@ -92,7 +92,8 @@
             
               <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Basic Usage Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#estimate-a-simple-linear-model">Estimate a simple linear model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#estimate-a-standard-regression-model">Estimate a standard regression model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#estimate-a-multi-level-model">Estimate a multi-level model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#inspect-random-effects">Inspect random effects</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#inspect-overall-fit">Inspect overall fit</a></li>
 </ul>
@@ -196,8 +197,25 @@
 <li>Continuous (IV1, IV2)</li>
 <li>Categorical (IV3)</li>
 </ul>
-<div class="section" id="estimate-a-simple-linear-model">
-<h2>Estimate a simple linear model<a class="headerlink" href="#estimate-a-simple-linear-model" title="Permalink to this headline">¶</a></h2>
+<p>We also have a grouping variable for multi-level modeling:</p>
+<ul class="simple">
+<li>Group</li>
+</ul>
+<div class="section" id="estimate-a-standard-regression-model">
+<h2>Estimate a standard regression model<a class="headerlink" href="#estimate-a-standard-regression-model" title="Permalink to this headline">¶</a></h2>
+<p>Fitting a standard regression model like using <code class="code docutils literal"><span class="pre">lm()</span></code> in R, simply entails initializing it with a model formula and pandas data-frame, and subsequently calling its <code class="code docutils literal"><span class="pre">fit</span></code> method.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Initialize model instance</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">Lm</span><span class="p">(</span><span class="s1">&#39;DV ~ IV1 + IV3&#39;</span><span class="p">,</span><span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">)</span>
+
+<span class="c1"># Fit it</span>
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="_images/simple_summary_ols.png" src="_images/simple_summary_ols.png" />
+<p><code class="code docutils literal"><span class="pre">Lm()</span></code> models can also be fit with robust standard errors, bootstrapped confidence intervals, or permutation-tests using the <code class="code docutils literal"><span class="pre">robust</span></code>, <code class="code docutils literal"><span class="pre">conf_int</span></code>, and <code class="code docutils literal"><span class="pre">permute</span></code> flags during fitting. See the API docs for more information on their usage.</p>
+</div>
+<div class="section" id="estimate-a-multi-level-model">
+<h2>Estimate a multi-level model<a class="headerlink" href="#estimate-a-multi-level-model" title="Permalink to this headline">¶</a></h2>
 <p>Fitting a model simply entails initializing it with a model formula and pandas data-frame, and subsequently calling its <code class="code docutils literal"><span class="pre">fit</span></code> method.</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Initialize model instance</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">Lmer</span><span class="p">(</span><span class="s1">&#39;DV ~ IV2 + (IV2|Group)&#39;</span><span class="p">,</span><span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">)</span>
@@ -206,7 +224,7 @@
 <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 </pre></div>
 </div>
-<img alt="_images/simple_summary.png" src="_images/simple_summary.png" />
+<img alt="_images/simple_summary_lmm.png" src="_images/simple_summary_lmm.png" />
 </div>
 <div class="section" id="inspect-random-effects">
 <h2>Inspect random effects<a class="headerlink" href="#inspect-random-effects" title="Permalink to this headline">¶</a></h2>
@@ -292,7 +310,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.2.0',
+            VERSION:'0.2.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
