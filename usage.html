@@ -216,7 +216,7 @@
 </div>
 <div class="section" id="estimate-a-multi-level-model">
 <h2>Estimate a multi-level model<a class="headerlink" href="#estimate-a-multi-level-model" title="Permalink to this headline">¶</a></h2>
-<p>Fitting a model simply entails initializing it with a model formula and pandas data-frame, and subsequently calling its <code class="code docutils literal"><span class="pre">fit</span></code> method.</p>
+<p>Fitting a multi-level model works similarily.</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Initialize model instance</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">Lmer</span><span class="p">(</span><span class="s1">&#39;DV ~ IV2 + (IV2|Group)&#39;</span><span class="p">,</span><span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">)</span>
 

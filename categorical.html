@@ -175,6 +175,7 @@
             
   <div class="section" id="categorical-predictors">
 <h1>Categorical Predictors<a class="headerlink" href="#categorical-predictors" title="Permalink to this headline">¶</a></h1>
+<p>The syntax for handling categorical predictors is <strong>different</strong> between standard regression models and multi-level models in <code class="code docutils literal"><span class="pre">pymer4</span></code>. This is because formula parsing is passed to R for multi-level models, but handled by Python for standard regression models. Please note the differences below.</p>
 <div class="section" id="standard-regression-models">
 <h2>Standard Regression Models<a class="headerlink" href="#standard-regression-models" title="Permalink to this headline">¶</a></h2>
 <p><code class="code docutils literal"><span class="pre">Lm()</span></code> models uses <a class="reference external" href="https://patsy.readthedocs.io/en/latest/">patsy</a> to parse model formulae for <em>standard regression analyses</em>. Patsy is very powerful and has built-in support for handling categorical coding schemes (e.g. wrapping predictors in the <code class="code docutils literal"><span class="pre">C()</span></code> syntax). Patsy can also perform some pre-processing such as scaling and standardization.</p>
@@ -193,10 +194,11 @@
 <h2>Dummy coding factors<a class="headerlink" href="#dummy-coding-factors" title="Permalink to this headline">¶</a></h2>
 <p>To dummy code factors simply pass a model’s <code class="code docutils literal"><span class="pre">fit</span></code> method a dictionary with keys containing model terms to be treated as factors, and values as a list of unique factor levels.</p>
 <p>The <em>first</em> term in the list will be treated as the reference level.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Initialize a model using a categorical predictor</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Initialize a multi-level-model</span>
+<span class="c1"># We&#39;re going to treat IV3 as categorical predictor during fitting</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">Lmer</span><span class="p">(</span><span class="s1">&#39;DV_l ~ IV3 + (IV3|Group)&#39;</span><span class="p">,</span><span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span><span class="n">family</span><span class="o">=</span><span class="s1">&#39;binomial&#39;</span><span class="p">)</span>
 
-<span class="c1"># Dummy code factors and set 1.0 as the reference level for IV3</span>
+<span class="c1"># IV3 has 3 levels. Use dummy codes and set 1.0 as the reference level</span>
 <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">factors</span><span class="o">=</span><span class="p">{</span>
     <span class="s1">&#39;IV3&#39;</span><span class="p">:[</span><span class="s1">&#39;1.0&#39;</span><span class="p">,</span><span class="s1">&#39;0.5&#39;</span><span class="p">,</span><span class="s1">&#39;1.5&#39;</span><span class="p">],</span>
     <span class="p">})</span>
@@ -222,7 +224,7 @@
 </div>
 <div class="section" id="custom-parameterizations">
 <h2>Custom parameterizations<a class="headerlink" href="#custom-parameterizations" title="Permalink to this headline">¶</a></h2>
-<p>Unlike the methods above, testing specific parameterizations without relying on factor coding is often easier done by creating new columns in a dataframe with specific coding schemes. These new columns can be utilized within models to test specific hypotheses. <em>Note: this is also useful method if you don’t want to use patsy’s formula langauge with standard regression models as suggested above</em>.</p>
+<p>Unlike the methods above, testing specific parameterizations without relying on factor coding is often easier done by creating new columns in a dataframe with specific coding schemes. These new columns can be utilized within models to test specific hypotheses. <em>Note: this is also a useful approach if you don’t want to use patsy’s formula langauge with standard regression models as noted above</em>.</p>
 <p>This is trivial using pandas map and assign methods. Here we’ll only build a linear contrast across factor levels (0.5 &lt; 1.0 &lt; 1.5), without all exhaustive higher level polynomial terms:</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span>
 <span class="n">IV_3_custom_lin</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;IV3&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">({</span>
