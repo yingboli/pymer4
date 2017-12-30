@@ -1,0 +1,347 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Simulating Data &mdash; pymer4 0.3.2 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="pymer4 0.3.2 documentation" href="index.html"/>
+        <link rel="next" title="Lme4 Random Effects Cheat Sheet" href="rfx_cheatsheet.html"/>
+        <link rel="prev" title="Categorical Predictors" href="categorical.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> pymer4
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Basic Usage Guide</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="categorical.html">Categorical Predictors</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Simulating Data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#generating-standard-regression-data">Generating standard regression data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#generating-multi-level-regression-data">Generating multi-level regression data</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rfx_cheatsheet.html">Lme4 Random Effects Cheat Sheet</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html#pymer4-models-model-classes"><code class="docutils literal"><span class="pre">pymer4.models</span></code>: Model Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html#module-pymer4.simulate"><code class="docutils literal"><span class="pre">pymer4.simulate</span></code>: Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html#module-pymer4.utils"><code class="docutils literal"><span class="pre">pymer4.utils</span></code>: Utilities</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">pymer4</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Simulating Data</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/simulate.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="simulating-data">
+<h1>Simulating Data<a class="headerlink" href="#simulating-data" title="Permalink to this headline">¶</a></h1>
+<p><code class="code docutils literal"><span class="pre">pymer4</span></code> comes with some easy-to-use functions for simulating data that can be modeled with <code class="code docutils literal"><span class="pre">Lm()</span></code> and multi-level data that can be modeled with <code class="code docutils literal"><span class="pre">Lmer()</span></code>. These functions can be found in the <code class="code docutils literal"><span class="pre">pymer4.simulate</span></code> module and are aptly named: <code class="code docutils literal"><span class="pre">simulate_lm()</span></code> and <code class="code docutils literal"><span class="pre">simulate_lmm()</span></code> respectively.</p>
+<p><code class="code docutils literal"><span class="pre">pymer4</span></code> gives you a lot of control over what you want your data to look like by setting properties such as:</p>
+<ul class="simple">
+<li>Number of data points and number of coefficients</li>
+<li>Specific coefficient values</li>
+<li>Means and standard deviations of predictors</li>
+<li>Correlations between predictors</li>
+<li>Amount of error (noise) in the data</li>
+<li>Number of groups/clusters (multi-level data only)</li>
+<li>Variance of random effects (multi-level data only)</li>
+</ul>
+<div class="section" id="generating-standard-regression-data">
+<h2>Generating standard regression data<a class="headerlink" href="#generating-standard-regression-data" title="Permalink to this headline">¶</a></h2>
+<p>Generating data for a standard regression is simple and returns a pandas dataframe with outcome and predictor variables ready for use with <code class="code docutils literal"><span class="pre">Lm()</span></code>, along with a vector of coefficients used to produce the data.</p>
+<p>Let’s generate 500 observations, with predictors with the values: 1.2, -40.1, and 3. We also have an intercept with a value of 100. The means of the columns of our design matrix (i.e. means of the predictors) will be: 10, 30, and 1. We’ll also add noise from a normal distribution with mean = 0, and sd = 5. Any correlations between predictors are purely random.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pymer4.simulate</span> <span class="kn">import</span> <span class="n">simulate_lm</span>
+
+<span class="n">data</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">simulate_lm</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span>
+                      <span class="mi">3</span><span class="p">,</span>
+                      <span class="n">coef_vals</span> <span class="o">=</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span><span class="mf">1.2</span><span class="p">,</span><span class="o">-</span><span class="mf">40.1</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span>
+                      <span class="n">mus</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span>
+                      <span class="n">noise_params</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span>
+                     <span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;True coefficients: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+<span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="_images/sim_lm_data_head.png" src="_images/sim_lm_data_head.png" />
+<p>Here are some checks you might do to make sure the data correctly generated:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Check mean of predictors</span>
+<span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Check correlations between predictors</span>
+<span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">corr</span><span class="p">()</span>
+
+<span class="c1"># Check coefficient recovery</span>
+<span class="kn">from</span> <span class="nn">pymer4.models</span> <span class="kn">import</span> <span class="n">Lm</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">Lm</span><span class="p">(</span><span class="s1">&#39;DV ~ IV1+IV2+IV3&#39;</span><span class="p">,</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>However, you have the option of being as general or specific as possible when generating data. For example let’s generate 100 observations with 5 predictors from a standard normal distribution, i.e. mean = 0, sd = 1 with no (random) correlations between predictors, and let <code class="code docutils literal"><span class="pre">pymer4</span></code> decide what to set the coefficient values to.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pymer4.simulate</span> <span class="kn">import</span> <span class="n">simulate_lm</span>
+
+<span class="n">data</span><span class="p">,</span><span class="n">b</span> <span class="o">=</span> <span class="n">simulate_lm</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="generating-multi-level-regression-data">
+<h2>Generating multi-level regression data<a class="headerlink" href="#generating-multi-level-regression-data" title="Permalink to this headline">¶</a></h2>
+<p>Generating data for a multi-level regression is just as simple and returns a pandas dataframe with outcome and predictor variables ready for use with <code class="code docutils literal"><span class="pre">Lmer()</span></code>, another dataframe with group/cluster level estimates (i.e. BLUPs), and a vector of population-level coefficients.</p>
+<p>Here’s an example generating 5000 observations, organized as 100 groups with 50 observations each. We’ll have three predictors with the values: 1.8, -2, and 10. We also have an intercept with a value of 4. The means of the columns of our design matrix (i.e. means of the predictors) will be: 10, 30, and 2. We’ll also introduce correlations between our predictors of r = .15. We’ll leave the default of standard normal noise i.e., mean = 0, and sd = 1.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pymer4.simulate</span> <span class="kn">import</span> <span class="n">simulate_lmm</span>
+
+<span class="n">num_obs</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">num_coef</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">num_grps</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">mus</span> <span class="o">=</span> <span class="p">[</span><span class="mf">10.</span><span class="p">,</span> <span class="mf">30.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">]</span>
+<span class="n">coef_vals</span> <span class="o">=</span> <span class="p">[</span><span class="mf">4.</span><span class="p">,</span><span class="mf">1.8</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">10</span><span class="p">]</span>
+<span class="n">corrs</span> <span class="o">=</span> <span class="o">.</span><span class="mi">15</span>
+
+<span class="n">data</span><span class="p">,</span> <span class="n">blups</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">simulate_lmm</span><span class="p">(</span><span class="n">num_obs</span><span class="p">,</span>
+                      <span class="n">num_coef</span><span class="p">,</span>
+                      <span class="n">num_grps</span><span class="p">,</span>
+                      <span class="n">coef_vals</span> <span class="o">=</span> <span class="n">coef_vals</span><span class="p">,</span>
+                      <span class="n">mus</span> <span class="o">=</span> <span class="n">mus</span><span class="p">,</span>
+                      <span class="n">corrs</span> <span class="o">=</span> <span class="n">corrs</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;True coefficients: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;BLUPs:&quot;</span><span class="p">)</span>
+<span class="n">blups</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Data:&quot;</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="_images/sim_lmm_data_head.png" src="_images/sim_lmm_data_head.png" />
+<p>Again here are some checks you might do to make sure the data correctly generated (by default lmm data will generally be a bit noisier due to within and across group/cluster variance; see the API for how to customize this):</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Group the data before running checks</span>
+<span class="n">group_data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;Group&quot;</span><span class="p">)</span>
+
+
+<span class="c1"># Check mean of predictors</span>
+<span class="n">group_data</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">grp</span><span class="p">:</span> <span class="n">grp</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Check correlations between predictors</span>
+<span class="n">group_data</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">grp</span><span class="p">:</span> <span class="n">grp</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">corr</span>
+
+<span class="c1"># Check coefficient recovery</span>
+<span class="kn">from</span> <span class="nn">pymer4.models</span> <span class="kn">import</span> <span class="n">Lmer</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">Lmer</span><span class="p">(</span><span class="s1">&#39;DV ~ IV1+IV2+IV3 + (IV1+IV2+IV3|Group)&#39;</span><span class="p">,</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="rfx_cheatsheet.html" class="btn btn-neutral float-right" title="Lme4 Random Effects Cheat Sheet" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="categorical.html" class="btn btn-neutral" title="Categorical Predictors" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Eshin Jolly.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.3.2',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

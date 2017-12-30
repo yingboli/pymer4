@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pymer4.models &mdash; pymer4 0.2.2 documentation</title>
+  <title>pymer4.models &mdash; pymer4 0.3.2 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="pymer4 0.2.2 documentation" href="../../index.html"/>
+    <link rel="top" title="pymer4 0.3.2 documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.2.2
+                0.3.2
               </div>
             
           
@@ -96,11 +96,15 @@
 <li class="toctree-l1"><a class="reference internal" href="../../categorical.html">Categorical Predictors</a></li>
 </ul>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../simulate.html">Simulating Data</a></li>
+</ul>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../../rfx_cheatsheet.html">Lme4 Random Effects Cheat Sheet</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../api.html">API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../api.html#pymer4-models-model-classes"><code class="docutils literal"><span class="pre">pymer4.models</span></code>: Model Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html#module-pymer4.simulate"><code class="docutils literal"><span class="pre">pymer4.simulate</span></code>: Simulation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../api.html#module-pymer4.utils"><code class="docutils literal"><span class="pre">pymer4.utils</span></code>: Utilities</a></li>
 </ul>
 
@@ -186,6 +190,10 @@
                           <span class="n">_ols</span><span class="p">,</span>
                           <span class="n">_perm_find</span>
                           <span class="p">)</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Eshin Jolly&#39;</span><span class="p">]</span>
+<span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;MIT&quot;</span>
+
 <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s1">&#39;always&#39;</span><span class="p">,</span><span class="ne">UserWarning</span><span class="p">)</span>
 <span class="n">pandas2ri</span><span class="o">.</span><span class="n">activate</span><span class="p">()</span>
 
@@ -261,7 +269,6 @@
 <span class="sd">            pandas.core.frame.DataFrame: copy of original data with factorized columns</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-
         <span class="k">if</span> <span class="n">ordered</span><span class="p">:</span>
 
             <span class="n">rstring</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
@@ -330,7 +337,7 @@
 <span class="sd">            verbose (bool): whether to print when and which model and confidence interval are being fitted</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            dataframe: R style summary() table</span>
+<span class="sd">            DataFrame: R style summary() table</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -550,7 +557,7 @@
 <span class="sd">            pred_type (str): whether the prediction should be on the &#39;response&#39; scale (default); or on the &#39;link&#39; scale of the predictors passed through the link function (e.g. log-odds scale in a logit model instead of probability values)</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            numpy.ndarray of predictions</span>
+<span class="sd">            ndarray: prediction values</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">required_cols</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">design_matrix</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
@@ -750,12 +757,11 @@
 
 <span class="sd">        Alternatively, OLS robust to heteroscedasticity can be fit by computing sandwich standard error estimates. This is similar to Stata&#39;s robust routine.</span>
 <span class="sd">        Robust estimators include:</span>
-<span class="sd">            - &#39;hc0&#39;: Huber (1980) original sandwich estimator</span>
-<span class="sd">            - &#39;hc3&#39;: MacKinnon and White (1985) HC3 sandwich estimator; provides more robustness in smaller samples than hc0, Long &amp; Ervin (2000)</span>
-<span class="sd">            - &#39;hac&#39;: Newey-West (1987) estimator for robustness to heteroscedasticity as well as serial auto-correlation at given lags.</span>
+<span class="sd">        - &#39;hc0&#39;: Huber (1980) original sandwich estimator</span>
+<span class="sd">        - &#39;hc3&#39;: MacKinnon and White (1985) HC3 sandwich estimator; provides more robustness in smaller samples than hc0, Long &amp; Ervin (2000)</span>
+<span class="sd">        - &#39;hac&#39;: Newey-West (1987) estimator for robustness to heteroscedasticity as well as serial auto-correlation at given lags.</span>
 
 <span class="sd">        Args:</span>
-
 <span class="sd">            robust (bool/str): whether to use heteroscedasticity robust s.e.and optionally which estimator type to use (&#39;hc0&#39;,&#39;hc3&#39;,&#39;hac&#39;). If robust = True, default robust estimator is &#39;hc0&#39;; default False</span>
 <span class="sd">            conf_int (str): whether confidence intervals should be computed through bootstrap (&#39;boot&#39;) or assuming a t-distribution (&#39;standard&#39;); default &#39;standard&#39;</span>
 <span class="sd">            permute (int): if non-zero, computes parameter significance tests by permuting t-stastics rather than parametrically; works with robust estimators</span>
@@ -766,7 +772,7 @@
 <span class="sd">            n_lags (int): number of lags for robust estimator type &#39;hac&#39; (ignored unless robust=&#39;hac&#39;); default 1</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            dataframe: R style summary() table</span>
+<span class="sd">            DataFrame: R style summary() table</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">permute</span> <span class="ow">and</span> <span class="n">permute</span> <span class="o">&lt;</span> <span class="mi">500</span><span class="p">:</span>
@@ -931,7 +937,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.2.2',
+            VERSION:'0.3.2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
