@@ -237,9 +237,33 @@
 </dd></dl>
 
 <dl class="method">
+<dt id="pymer4.models.Lmer.simulate">
+<code class="descname">simulate</code><span class="sig-paren">(</span><em>num_datasets</em>, <em>use_rfx=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymer4/models.html#Lmer.simulate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymer4.models.Lmer.simulate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simulate new responses based upon estimates from a fitted model. By default group/cluster means for simulated data will match those of the original data. Unlike predict, this is a non-deterministic operation because lmer will sample random-efects values for all groups/cluster and then sample data points from their respective conditional distributions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>num_datasets</strong> (<em>int</em>) – number of simulated datasets to generate. Each simulation always generates a dataset that matches the size of the original data</li>
+<li><strong>use_rfx</strong> (<em>bool</em>) – match group/cluster means in simulated data?; Default True</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">simulated data values</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">ndarray</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="pymer4.models.Lmer.predict">
 <code class="descname">predict</code><span class="sig-paren">(</span><em>data</em>, <em>use_rfx=False</em>, <em>pred_type='response'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymer4/models.html#Lmer.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymer4.models.Lmer.predict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Make predictions given new data. Input must be a dataframe that contains the same columns as the model.matrix excluding the intercept (i.e. all the predictor variables used to fit the model). If using random effects to make predictions, input data must also contain a column for the grouping factors that were used to fit the model random effects terms.</p>
+<dd><p>Make predictions given new data. Input must be a dataframe that contains the same columns as the model.matrix excluding the intercept (i.e. all the predictor variables used to fit the model). If using random effects to make predictions, input data must also contain a column for the group identifier that were used to fit the model random effects terms. Using random effects to make predictions only makes sense if predictions are being made about the same groups/clusters.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -268,8 +292,27 @@
 </dd></dl>
 
 <dl class="method">
+<dt id="pymer4.models.Lmer.post_hoc">
+<code class="descname">post_hoc</code><span class="sig-paren">(</span><em>marginal_vars</em>, <em>grouping_vars=None</em>, <em>p_adjust='tukey'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymer4/models.html#Lmer.post_hoc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymer4.models.Lmer.post_hoc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Post-hoc pair-wise tests corrected for multiple comparisons (Tukey method) implemented using the lsmeans package. This method provide both marginal means/trends along with marginal pairwise differences. More info can be found at: <a class="reference external" href="https://cran.r-project.org/web/packages/lsmeans/lsmeans.pdf">https://cran.r-project.org/web/packages/lsmeans/lsmeans.pdf</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>marginal_var</strong> (<em>str</em>) – what variable(s) to compute marginal means/trends for; unique combinations of factor levels of these variable(s) will determine family-wise error correction</li>
+<li><strong>grouping_vars</strong> (<em>str/list</em>) – what variable(s) to group on. Trends/means/comparisons of other variable(s), will be computed at each level of these variable(s)</li>
+<li><strong>p_adjust</strong> (<em>str</em>) – multiple comparisons adjustment method. One of: tukey, bonf, fdr, hochberg, hommel, holm, dunnet, mvt (monte-carlo multi-variate T, aka exact tukey/dunnet). Default tukey</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="pymer4.models.Lmer.plot">
-<code class="descname">plot</code><span class="sig-paren">(</span><em>param</em>, <em>figsize=(8</em>, <em>6)</em>, <em>xlabel=''</em>, <em>ylabel=''</em>, <em>plot_fixef=True</em>, <em>plot_ci=False</em>, <em>grps=[]</em>, <em>ax=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymer4/models.html#Lmer.plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymer4.models.Lmer.plot" title="Permalink to this definition">¶</a></dt>
+<code class="descname">plot</code><span class="sig-paren">(</span><em>param</em>, <em>figsize=(8</em>, <em>6)</em>, <em>xlabel=''</em>, <em>ylabel=''</em>, <em>plot_fixef=True</em>, <em>plot_ci=True</em>, <em>grps=[]</em>, <em>ax=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymer4/models.html#Lmer.plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymer4.models.Lmer.plot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot random and group level parameters from a fitted model</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -287,7 +330,8 @@
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">matplotlib figure handle, matplotlib axis handle</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">matplotlib figure handle
+matplotlib axis handle</p>
 </td>
 </tr>
 </tbody>
@@ -324,7 +368,7 @@
 <li><strong>coefs</strong> (<em>pandas.core.frame.DataFrame/list</em>) – model summary table of population parameters</li>
 <li><strong>resid</strong> (<em>numpy.ndarray</em>) – model residuals</li>
 <li><strong>fits</strong> (<em>numpy.ndarray</em>) – model fits/predictions</li>
-<li><strong>model_obj</strong> (<em>lmer model</em>) – rpy2 lmer model object</li>
+<li><strong>model_obj</strong> (<em>lm model</em>) – rpy2 lmer model object</li>
 <li><strong>factors</strong> (<em>dict</em>) – factors used to fit the model if any</li>
 </ul>
 </td>
@@ -399,9 +443,8 @@ Provided a number of observations, number of coefficients, and optionally correl
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><p>data</p>
-<p>ground-truth coefficient values</p>
-</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">data
+ground-truth coefficient values</p>
 </td>
 </tr>
 </tbody>
@@ -436,10 +479,9 @@ groups (sigma = .25).</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><p>data</p>
-<p>group/cluster level coefficients (i.e. BLUPs)</p>
-<p>population coefficient values</p>
-</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">data
+group/cluster level coefficients (i.e. BLUPs)
+population coefficient values</p>
 </td>
 </tr>
 </tbody>

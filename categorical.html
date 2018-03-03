@@ -183,20 +183,36 @@
 <div class="section" id="standard-regression-models">
 <h2>Standard Regression Models<a class="headerlink" href="#standard-regression-models" title="Permalink to this headline">¶</a></h2>
 <p><code class="code docutils literal"><span class="pre">Lm()</span></code> models uses <a class="reference external" href="https://patsy.readthedocs.io/en/latest/">patsy</a> to parse model formulae for <em>standard regression analyses</em>. Patsy is very powerful and has built-in support for handling categorical coding schemes (e.g. wrapping predictors in the <code class="code docutils literal"><span class="pre">C()</span></code> syntax). Patsy can also perform some pre-processing such as scaling and standardization.</p>
-<p>Please refer to the <a class="reference external" href="https://patsy.readthedocs.io/en/latest/categorical-coding.html">patsy documentation</a> when working with standard regression models that have categorical predictors.</p>
+<p>A few common parameterizations include:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Assuming a categorical predictor IV1 has 3 levels named, &#39;a&#39;, &#39;b&#39;, &#39;c&#39;</span>
+
+<span class="c1"># Treatment contrasts (dummy-coding) with &#39;a&#39; as the reference level</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">Lm</span><span class="p">(</span><span class="s1">&#39;DV ~ C(IV, levels=[&#39;</span><span class="n">a</span><span class="s1">&#39;,&#39;</span><span class="sa">b</span><span class="s1">&#39;,&#39;</span><span class="n">c</span><span class="s1">&#39;])&#39;</span><span class="p">,</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+
+<span class="c1"># Polynomial contrasts</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">Lm</span><span class="p">(</span><span class="s1">&#39;DV ~ C(IV, Poly)&#39;</span><span class="p">,</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+
+<span class="c1"># Sum-to-zero contrasts</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">Lm</span><span class="p">(</span><span class="s1">&#39;DV ~ C(IV, Sum)&#39;</span><span class="p">,</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Please refer to the <a class="reference external" href="https://patsy.readthedocs.io/en/latest/categorical-coding.html">patsy documentation</a> for more details when working with standard regression models that have categorical predictors.</p>
 </div>
 <div class="section" id="multi-level-models">
 <h2>Multi-level Models<a class="headerlink" href="#multi-level-models" title="Permalink to this headline">¶</a></h2>
 <p><code class="code docutils literal"><span class="pre">Lmer()</span></code> models currently have support for handling categorical predictors in one of two ways based on how R’s <code class="code docutils literal"><span class="pre">factor()</span></code> works:</p>
 <ol class="arabic simple">
-<li>Dummy-coded factor levels in which each model term is the difference between a factor levels and a selected reference level</li>
+<li>Dummy-coded factor levels (treatment contrasts) in which each model term is the difference between a factor level and a selected reference level</li>
 <li>Orthogonal polynomial contrasts in which each model term is a polynomial contrast across factor levels (e.g. linear, quadratic, cubic, etc)</li>
 </ol>
-<p>To make re-parameterizing models easier, factor codings are set as an argument to a model’s <code class="code docutils literal"><span class="pre">fit</span></code> method. This obviates the need for adjusting data-frame properties as in R.</p>
+<p>To make re-parameterizing models easier, factor codings are passed as an argument to a model’s <code class="code docutils literal"><span class="pre">fit</span></code> method. This obviates the need for adjusting data-frame properties as in R.</p>
 </div>
 <div class="section" id="dummy-coding-factors">
 <h2>Dummy coding factors<a class="headerlink" href="#dummy-coding-factors" title="Permalink to this headline">¶</a></h2>
-<p>To dummy code factors simply pass a model’s <code class="code docutils literal"><span class="pre">fit</span></code> method a dictionary with keys containing model terms to be treated as factors, and values as a list of unique factor levels.</p>
+<p>To dummy code factors (i.e. use treatment contrasts) simply pass a model’s <code class="code docutils literal"><span class="pre">fit</span></code> method a dictionary with keys containing model terms to be treated as factors, and values as a list of unique factor levels.</p>
 <p>The <em>first</em> term in the list will be treated as the reference level.</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Initialize a multi-level-model</span>
 <span class="c1"># We&#39;re going to treat IV3 as categorical predictor during fitting</span>

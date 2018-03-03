@@ -183,6 +183,7 @@
 <span class="kn">from</span> <span class="nn">patsy</span> <span class="k">import</span> <span class="n">dmatrices</span>
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">six</span> <span class="k">import</span> <span class="n">string_types</span>
 <span class="kn">from</span> <span class="nn">joblib</span> <span class="k">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
 <span class="kn">from</span> <span class="nn">pymer4.utils</span> <span class="k">import</span> <span class="p">(</span><span class="n">_sig_stars</span><span class="p">,</span>
                           <span class="n">_chunk_boot_ols_coefs</span><span class="p">,</span>
@@ -247,6 +248,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">coefs</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model_obj</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">factors</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">marginal_effects</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">marginal_contrasts</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">out</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">.</span><span class="si">{}</span><span class="s2">(fitted=</span><span class="si">{}</span><span class="s2">, formula=</span><span class="si">{}</span><span class="s2">, family=</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
@@ -287,11 +290,11 @@
 
         <span class="n">factorize</span> <span class="o">=</span> <span class="n">robjects</span><span class="o">.</span><span class="n">r</span><span class="p">(</span><span class="n">rstring</span><span class="p">)</span>
         <span class="n">df</span> <span class="o">=</span> <span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">factor_dict</span><span class="o">.</span><span class="n">iterkeys</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">factor_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="n">df</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
 
         <span class="n">r_df</span> <span class="o">=</span> <span class="n">pandas2ri</span><span class="o">.</span><span class="n">py2ri</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">factor_dict</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">factor_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
 
             <span class="n">r_df</span> <span class="o">=</span> <span class="n">factorize</span><span class="p">(</span><span class="n">r_df</span><span class="p">,</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="p">)</span>
 
@@ -304,7 +307,8 @@
         <span class="c1">#TODO Make sure factors are set with orthogonal contrasts first</span>
         <span class="sd">&quot;&quot;&quot;Compute a Type III ANOVA table on a fitted model.&quot;&quot;&quot;</span>
 
-        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">fitted</span> <span class="o">==</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;Model hasn&#39;t been fit! Call fit() method before computing ANOVA table.&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">fitted</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Model hasn&#39;t been fit! Call fit() method before computing ANOVA table.&quot;</span><span class="p">)</span>
 
         <span class="c1">#See rpy2 for building contrasts or loop and construct rstring</span>
         <span class="n">rstring</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
@@ -323,7 +327,6 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">anova</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;DF&#39;</span><span class="p">,</span><span class="s1">&#39;SS&#39;</span><span class="p">,</span><span class="s1">&#39;MS&#39;</span><span class="p">,</span><span class="s1">&#39;F-stat&#39;</span><span class="p">]</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Analysis of variance Table of type III with Satterthwaite approximated degrees of freedom:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">anova</span>
-
 
 <div class="viewcode-block" id="Lmer.fit"><a class="viewcode-back" href="../../api.html#pymer4.models.Lmer.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">conf_int</span><span class="o">=</span><span class="s1">&#39;Wald&#39;</span><span class="p">,</span><span class="n">factors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">ordered</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">summarize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -547,9 +550,42 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span></div>
 
 
+<div class="viewcode-block" id="Lmer.simulate"><a class="viewcode-back" href="../../api.html#pymer4.models.Lmer.simulate">[docs]</a>    <span class="k">def</span> <span class="nf">simulate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">num_datasets</span><span class="p">,</span><span class="n">use_rfx</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Simulate new responses based upon estimates from a fitted model. By default group/cluster means for simulated data will match those of the original data. Unlike predict, this is a non-deterministic operation because lmer will sample random-efects values for all groups/cluster and then sample data points from their respective conditional distributions.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            num_datasets (int): number of simulated datasets to generate. Each simulation always generates a dataset that matches the size of the original data</span>
+<span class="sd">            use_rfx (bool): match group/cluster means in simulated data?; Default True</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            ndarray: simulated data values</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">num_datasets</span><span class="p">,</span><span class="nb">float</span><span class="p">):</span>
+            <span class="n">num_datasets</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">num_datasets</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">num_datasets</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;num_datasets must be an integer&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">use_rfx</span><span class="p">:</span>
+            <span class="n">re_form</span> <span class="o">=</span> <span class="s1">&#39;NULL&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">re_form</span> <span class="o">=</span> <span class="s1">&#39;NA&#39;</span>
+
+        <span class="n">rstring</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            function(model){</span>
+<span class="s2">            out &lt;- simulate(model,&quot;&quot;&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">num_datasets</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;&quot;&quot;,allow.new.levels=TRUE,re.form=&quot;&quot;&quot;</span><span class="o">+</span><span class="n">re_form</span><span class="o">+</span><span class="s2">&quot;&quot;&quot;)</span>
+<span class="s2">            out</span>
+<span class="s2">            }</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+        <span class="n">simulate_func</span> <span class="o">=</span> <span class="n">robjects</span><span class="o">.</span><span class="n">r</span><span class="p">(</span><span class="n">rstring</span><span class="p">)</span>
+        <span class="n">sims</span> <span class="o">=</span> <span class="n">pandas2ri</span><span class="o">.</span><span class="n">ri2py</span><span class="p">(</span><span class="n">simulate_func</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_obj</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">sims</span></div>
+
+
 <div class="viewcode-block" id="Lmer.predict"><a class="viewcode-back" href="../../api.html#pymer4.models.Lmer.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">data</span><span class="p">,</span><span class="n">use_rfx</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">pred_type</span><span class="o">=</span><span class="s1">&#39;response&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Make predictions given new data. Input must be a dataframe that contains the same columns as the model.matrix excluding the intercept (i.e. all the predictor variables used to fit the model). If using random effects to make predictions, input data must also contain a column for the grouping factors that were used to fit the model random effects terms.</span>
+<span class="sd">        Make predictions given new data. Input must be a dataframe that contains the same columns as the model.matrix excluding the intercept (i.e. all the predictor variables used to fit the model). If using random effects to make predictions, input data must also contain a column for the group identifier that were used to fit the model random effects terms. Using random effects to make predictions only makes sense if predictions are being made about the same groups/clusters.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            data (pandas.core.frame.DataFrame): input data to make predictions on</span>
@@ -561,11 +597,13 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">required_cols</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">design_matrix</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
-        <span class="k">assert</span> <span class="nb">all</span><span class="p">([</span><span class="n">col</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">required_cols</span><span class="p">]),</span> <span class="s2">&quot;Column names do not match all fixed effects model terms!&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">([</span><span class="n">col</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">required_cols</span><span class="p">]):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Column names do not match all fixed effects model terms!&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">use_rfx</span><span class="p">:</span>
             <span class="n">required_cols</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">required_cols</span><span class="p">)</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grps</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
-            <span class="k">assert</span> <span class="nb">all</span><span class="p">([</span><span class="n">col</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">required_cols</span><span class="p">]),</span> <span class="s2">&quot;Column names are missing random effects model grouping terms!&quot;</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">([</span><span class="n">col</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">required_cols</span><span class="p">]):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Column names are missing random effects model grouping terms!&quot;</span><span class="p">)</span>
 
             <span class="n">re_form</span> <span class="o">=</span> <span class="s1">&#39;NULL&#39;</span>
         <span class="k">else</span><span class="p">:</span>
@@ -588,7 +626,8 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">fitted</span> <span class="o">==</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;Model must be fitted to generate summary!&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">fitted</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Model must be fitted to generate summary!&quot;</span><span class="p">)</span>
 
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Formula: </span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">formula</span><span class="p">))</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Number of observations: </span><span class="si">%s</span><span class="se">\t</span><span class="s2"> Groups: </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">grps</span><span class="p">))</span>
@@ -602,7 +641,98 @@
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Fixed effects:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">coefs</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Lmer.plot"><a class="viewcode-back" href="../../api.html#pymer4.models.Lmer.plot">[docs]</a>    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">param</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">6</span><span class="p">),</span><span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="n">plot_fixef</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">plot_ci</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">grps</span><span class="o">=</span><span class="p">[],</span><span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Lmer.post_hoc"><a class="viewcode-back" href="../../api.html#pymer4.models.Lmer.post_hoc">[docs]</a>    <span class="k">def</span> <span class="nf">post_hoc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">marginal_vars</span><span class="p">,</span> <span class="n">grouping_vars</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">p_adjust</span><span class="o">=</span><span class="s1">&#39;tukey&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Post-hoc pair-wise tests corrected for multiple comparisons (Tukey method) implemented using the lsmeans package. This method provide both marginal means/trends along with marginal pairwise differences. More info can be found at: https://cran.r-project.org/web/packages/lsmeans/lsmeans.pdf</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            marginal_var (str): what variable(s) to compute marginal means/trends for; unique combinations of factor levels of these variable(s) will determine family-wise error correction</span>
+<span class="sd">            grouping_vars (str/list): what variable(s) to group on. Trends/means/comparisons of other variable(s), will be computed at each level of these variable(s)</span>
+<span class="sd">            p_adjust (str): multiple comparisons adjustment method. One of: tukey, bonf, fdr, hochberg, hommel, holm, dunnet, mvt (monte-carlo multi-variate T, aka exact tukey/dunnet). Default tukey</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">marginal_vars</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Must provide marginal_vars&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">fitted</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Model must be fitted to generate post-hoc comparisons&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">marginal_vars</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">marginal_vars</span> <span class="o">=</span> <span class="p">[</span><span class="n">marginal_vars</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">grouping_vars</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">grouping_vars</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">grouping_vars</span> <span class="o">=</span> <span class="p">[</span><span class="n">grouping_vars</span><span class="p">]</span>
+            <span class="c1"># Conditional vars can only be factor types</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">([</span><span class="n">elem</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">factors</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">grouping_vars</span><span class="p">]):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;All grouping_vars must be existing categorical variables (i.e. factors)&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Need to figure out if marginal_vars is continuous or not to determine lstrends or lsmeans call</span>
+        <span class="n">cont</span><span class="p">,</span><span class="n">factor</span> <span class="o">=</span> <span class="p">[],[]</span>
+        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">marginal_vars</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">var</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">factors</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">cont</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">factor</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">cont</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">factor</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;With more than one marginal variable, all variables must be categorical factors. Mixing continuous and categorical variables is not supported. Try passing additional categorical factors to grouping_vars&quot;&quot;&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cont</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Marginal variables can only contain one continuous variable&quot;</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">cont</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">grouping_vars</span><span class="p">:</span>
+                        <span class="c1"># Lstrends</span>
+                        <span class="n">cont</span> <span class="o">=</span> <span class="n">cont</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="n">_conditional</span> <span class="o">=</span> <span class="s1">&#39;+&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">grouping_vars</span><span class="p">)</span>
+                        <span class="n">rstring</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                            function(model){</span>
+<span class="s2">                            suppressMessages(library(lsmeans))</span>
+<span class="s2">                            out &lt;- lstrends(model,pairwise ~ &quot;&quot;&quot;</span> <span class="o">+</span> <span class="n">_conditional</span> <span class="o">+</span> <span class="s2">&quot;&quot;&quot;,var=&#39;&quot;&quot;&quot;</span> <span class="o">+</span> <span class="n">cont</span> <span class="o">+</span> <span class="s2">&quot;&quot;&quot;&#39;,adjust=&#39;&quot;&quot;&quot;</span> <span class="o">+</span> <span class="n">p_adjust</span> <span class="o">+</span> <span class="s2">&quot;&quot;&quot;&#39;)</span>
+<span class="s2">                            out</span>
+<span class="s2">                            }&quot;&quot;&quot;</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;grouping_vars are required with a continuous marginal_vars&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">factor</span><span class="p">:</span>
+                <span class="n">_marginal</span> <span class="o">=</span> <span class="s1">&#39;+&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">factor</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">grouping_vars</span><span class="p">:</span>
+                    <span class="c1"># Lsmeans with pipe</span>
+                    <span class="n">_conditional</span> <span class="o">=</span> <span class="s1">&#39;+&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">grouping_vars</span><span class="p">)</span>
+                    <span class="n">rstring</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                        function(model){</span>
+<span class="s2">                        suppressMessages(library(lsmeans))</span>
+<span class="s2">                        out &lt;- lsmeans(model,pairwise ~ &quot;&quot;&quot;</span> <span class="o">+</span> <span class="n">_marginal</span> <span class="o">+</span> <span class="s2">&quot;&quot;&quot;|&quot;&quot;&quot;</span> <span class="o">+</span> <span class="n">_conditional</span> <span class="o">+</span> <span class="s2">&quot;&quot;&quot;, adjust=&#39;&#39;&quot;&quot;&quot;</span> <span class="o">+</span> <span class="n">p_adjust</span> <span class="o">+</span> <span class="s2">&quot;&quot;&quot;&#39;)</span>
+<span class="s2">                        out</span>
+<span class="s2">                        }&quot;&quot;&quot;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># Lsmeans without pipe</span>
+                    <span class="n">rstring</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                        function(model){</span>
+<span class="s2">                        suppressMessages(library(lsmeans))</span>
+<span class="s2">                        out &lt;- lsmeans(model,pairwise ~ &quot;&quot;&quot;</span> <span class="o">+</span> <span class="n">_marginal</span> <span class="o">+</span> <span class="s2">&quot;&quot;&quot;,adjust=&#39;&quot;&quot;&quot;</span> <span class="o">+</span> <span class="n">p_adjust</span> <span class="o">+</span> <span class="s2">&quot;&quot;&quot;&#39;)</span>
+<span class="s2">                        out</span>
+<span class="s2">                        }&quot;&quot;&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;marginal_vars are not in model!&quot;</span><span class="p">)</span>
+
+
+        <span class="n">func</span> <span class="o">=</span> <span class="n">robjects</span><span class="o">.</span><span class="n">r</span><span class="p">(</span><span class="n">rstring</span><span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_obj</span><span class="p">)</span>
+        <span class="n">base</span> <span class="o">=</span> <span class="n">importr</span><span class="p">(</span><span class="s1">&#39;base&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">marginal_effects</span> <span class="o">=</span> <span class="n">pandas2ri</span><span class="o">.</span><span class="n">ri2py</span><span class="p">(</span><span class="n">base</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">rx2</span><span class="p">(</span><span class="s1">&#39;lsmeans&#39;</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">marginal_contrasts</span> <span class="o">=</span> <span class="n">pandas2ri</span><span class="o">.</span><span class="n">ri2py</span><span class="p">(</span><span class="n">base</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">rx2</span><span class="p">(</span><span class="s1">&#39;contrasts&#39;</span><span class="p">)))</span>
+
+        <span class="k">if</span> <span class="n">p_adjust</span> <span class="o">==</span> <span class="s1">&#39;tukey&#39;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">marginal_contrasts</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">marginal_effects</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;P-values adjusted by tukey method for family of </span><span class="si">{}</span><span class="s2"> estimates&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">marginal_effects</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="k">elif</span> <span class="n">p_adjust</span> <span class="o">!=</span> <span class="s1">&#39;tukey&#39;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;P-values adjusted by </span><span class="si">{}</span><span class="s2"> method for </span><span class="si">{}</span><span class="s2"> comparisons&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p_adjust</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">marginal_contrasts</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">marginal_effects</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">marginal_contrasts</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Lmer.plot"><a class="viewcode-back" href="../../api.html#pymer4.models.Lmer.plot">[docs]</a>    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">param</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">6</span><span class="p">),</span><span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="n">plot_fixef</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">plot_ci</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">grps</span><span class="o">=</span><span class="p">[],</span><span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot random and group level parameters from a fitted model</span>
 
@@ -617,11 +747,13 @@
 <span class="sd">            ax (matplotlib.axes.Axes): axis handle for an existing plot; if provided will ensure that random parameter plots appear *behind* all other plot objects.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            matplotlib figure handle, matplotlib axis handle</span>
+<span class="sd">            matplotlib figure handle</span>
+<span class="sd">            matplotlib axis handle</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">fitted</span><span class="p">,</span> <span class="s2">&quot;Model must be fit before plotting!&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">fitted</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Model must be fit before plotting!&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">factors</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Plotting can currently only handle models with continuous predictors!&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fixef</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ranef</span><span class="p">,</span><span class="nb">list</span><span class="p">):</span>
@@ -634,29 +766,10 @@
         <span class="c1">#Sort order to handle bug in matplotlib plotting</span>
         <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">x_vals</span><span class="p">)</span>
 
-        <span class="c1">#Get all other variables, excluding intercept</span>
-        <span class="c1">#other_vals = [elem for elem in self.design_matrix.columns if elem not in [&#39;(Intercept)&#39;,param]]</span>
-        <span class="c1">#Get mean values for other vals to make conditional predictions</span>
-        <span class="c1">#other_vals_means = self.design_matrix[other_vals].mean(axis=0)</span>
-
-        <span class="c1">#Generate group effects predictions first</span>
-        <span class="c1">#Prediction = Intercept + coef * desired_param_value_range + coef_2 * other_param_held_at_mean ....</span>
-
         <span class="c1">#Get desired parameter part of the prediction</span>
-        <span class="n">fixef_desired</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coefs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;(Intercept)&#39;</span><span class="p">,</span><span class="s1">&#39;Estimate&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">coefs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">param</span><span class="p">,</span><span class="s1">&#39;Estimate&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">x_vals</span>
-        <span class="n">fixef_desired_upper</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coefs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;(Intercept)&#39;</span><span class="p">,</span><span class="s1">&#39;97.5_ci&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">coefs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">param</span><span class="p">,</span><span class="s1">&#39;97.5_ci&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">x_vals</span>
-        <span class="n">fixef_desired_lower</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coefs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;(Intercept)&#39;</span><span class="p">,</span><span class="s1">&#39;2.5_ci&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">coefs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">param</span><span class="p">,</span><span class="s1">&#39;2.5_ci&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">x_vals</span>
-
-
-        <span class="c1">#Get other parameters part of the prediction, held at their mean value</span>
-        <span class="c1">#fixef_other = np.dot(other_vals_means,self.coefs.loc[other_vals,&#39;Estimate&#39;])</span>
-        <span class="c1">#fixef_other_lower = np.dot(other_vals_means,self.coefs.loc[other_vals,&#39;2.5_ci&#39;])</span>
-        <span class="c1">#fixef_other_upper = np.dot(other_vals_means,self.coefs.loc[other_vals,&#39;97.5_ci&#39;])</span>
-
-        <span class="c1">#Add them together for conditional prediction</span>
-        <span class="n">fixef_pred</span> <span class="o">=</span> <span class="n">fixef_desired</span> <span class="c1">#+ fixef_other</span>
-        <span class="n">fixef_pred_upper</span> <span class="o">=</span> <span class="n">fixef_desired_upper</span> <span class="c1">#+ fixef_other_upper</span>
-        <span class="n">fixef_pred_lower</span> <span class="o">=</span> <span class="n">fixef_desired_lower</span> <span class="c1">#+ fixef_other_lower</span>
+        <span class="n">fixef_pred</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coefs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;(Intercept)&#39;</span><span class="p">,</span><span class="s1">&#39;Estimate&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">coefs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">param</span><span class="p">,</span><span class="s1">&#39;Estimate&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">x_vals</span>
+        <span class="n">fixef_pred_upper</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coefs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;(Intercept)&#39;</span><span class="p">,</span><span class="s1">&#39;97.5_ci&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">coefs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">param</span><span class="p">,</span><span class="s1">&#39;97.5_ci&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">x_vals</span>
+        <span class="n">fixef_pred_lower</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coefs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;(Intercept)&#39;</span><span class="p">,</span><span class="s1">&#39;2.5_ci&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">coefs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">param</span><span class="p">,</span><span class="s1">&#39;2.5_ci&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">x_vals</span>
 
         <span class="k">if</span> <span class="n">grps</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">grps</span><span class="p">):</span>
@@ -685,7 +798,8 @@
 
         <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">ylim</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">fits</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">fits</span><span class="o">.</span><span class="n">max</span><span class="p">()),</span>
                <span class="n">xlim</span> <span class="o">=</span> <span class="p">(</span><span class="n">x_vals</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span><span class="n">x_vals</span><span class="o">.</span><span class="n">max</span><span class="p">()),</span>
-               <span class="n">xlabel</span> <span class="o">=</span> <span class="n">param</span><span class="p">);</span>
+               <span class="n">xlabel</span> <span class="o">=</span> <span class="n">param</span><span class="p">,</span>
+               <span class="n">ylabel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">formula</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;~&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">());</span>
         <span class="k">if</span> <span class="n">xlabel</span><span class="p">:</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">xlabel</span><span class="p">);</span>
         <span class="k">if</span> <span class="n">ylabel</span><span class="p">:</span>
@@ -715,7 +829,7 @@
 <span class="sd">        coefs (pandas.core.frame.DataFrame/list): model summary table of population parameters</span>
 <span class="sd">        resid (numpy.ndarray): model residuals</span>
 <span class="sd">        fits (numpy.ndarray): model fits/predictions</span>
-<span class="sd">        model_obj(lmer model): rpy2 lmer model object</span>
+<span class="sd">        model_obj(lm model): rpy2 lmer model object</span>
 <span class="sd">        factors (dict): factors used to fit the model if any</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -824,8 +938,7 @@
             <span class="n">seeds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">iinfo</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="n">n_boot</span><span class="p">)</span>
 
             <span class="c1"># Since we&#39;re bootstrapping coefficients themselves we don&#39;t need the robust info anymore</span>
-            <span class="n">boot_betas</span> <span class="o">=</span> <span class="n">par_for</span><span class="p">(</span><span class="n">delayed</span><span class="p">(</span>                          <span class="n">_chunk_boot_ols_coefs</span>
-<span class="p">)(</span><span class="n">dat</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span><span class="n">formula</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">formula</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="n">seeds</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_boot</span><span class="p">))</span>
+            <span class="n">boot_betas</span> <span class="o">=</span> <span class="n">par_for</span><span class="p">(</span><span class="n">delayed</span><span class="p">(</span>                          <span class="n">_chunk_boot_ols_coefs</span><span class="p">)(</span><span class="n">dat</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span><span class="n">formula</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">formula</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="n">seeds</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_boot</span><span class="p">))</span>
 
             <span class="n">boot_betas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">boot_betas</span><span class="p">)</span>
             <span class="n">ci_u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">boot_betas</span><span class="p">,</span><span class="mf">97.5</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
@@ -893,14 +1006,18 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">fitted</span> <span class="o">==</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;Model must be fitted to generate summary!&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">fitted</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Model must be fitted to generate summary!&quot;</span><span class="p">)</span>
 
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Formula: </span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">formula</span><span class="p">))</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Std-errors: </span><span class="si">{}</span><span class="se">\t</span><span class="s2">CIs: </span><span class="si">{}</span><span class="s2"> 95%</span><span class="se">\t</span><span class="s2">Inference: </span><span class="si">{}</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">se_type</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">ci_type</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">sig_type</span><span class="p">))</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Number of observations: </span><span class="si">%s</span><span class="se">\t</span><span class="s2"> R^2: </span><span class="si">%.3f</span><span class="se">\t</span><span class="s2"> R^2_adj: </span><span class="si">%.3f</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">rsquared</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">rsquared_adj</span><span class="p">))</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Log-likelihood: </span><span class="si">%.3f</span><span class="s2"> </span><span class="se">\t</span><span class="s2"> AIC: </span><span class="si">%.3f</span><span class="se">\t</span><span class="s2"> BIC: </span><span class="si">%.3f</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">logLike</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">AIC</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">BIC</span><span class="p">))</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Fixed effects:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">coefs</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">coefs</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">post_hoc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Post-hoc tests are not yet implemented for linear models.&quot;</span><span class="p">)</span></div>
 </pre></div>
 
            </div>
