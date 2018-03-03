@@ -171,7 +171,7 @@
             
   <div class="section" id="pymer4">
 <h1>Pymer4<a class="headerlink" href="#pymer4" title="Permalink to this headline">¶</a></h1>
-<p>Love multi-level-modeling using <a class="reference external" href="https://cran.r-project.org/web/packages/lme4/index.html">lme4</a> in R, but prefer to work in the scientific Python ecosystem? This this package has got you covered! It’s a small convenience package wrapping the basic functionality of lme4 for compatibility with python. (<em>Currently this only include linear and logistic multi-level models</em>)</p>
+<p>Love multi-level-modeling using <a class="reference external" href="https://cran.r-project.org/web/packages/lme4/index.html">lme4</a> in R, but prefer to work in the scientific Python ecosystem? This package has got you covered! It’s a small convenience package wrapping the basic functionality of lme4 for compatibility with python. (<em>Currently this only include linear and logistic multi-level models</em>)</p>
 <p>This package’s main purpose is to provide a clean interface that hides the back-and-forth code required when moving between R and Python. In other words a user can work completely in Python, never having to deal with R, but get (most) of lme4’s goodness. Behind the scenes this package simply uses <a class="reference external" href="https://rpy2.readthedocs.io/en/version_2.8.x/">rpy2</a> to pass objects between languages, compute what’s needed, parse everything, and convert to Python types (e.g. numpy arrays, pandas dataframes, etc).</p>
 <p>This package can also fit standard regression models with a few extra bells and whistles compared to R’s <code class="code docutils literal"><span class="pre">lm()</span></code> (<em>Currently this only includes linear models</em>)</p>
 <p>TL;DR This package is your new <em>simple</em> Pythonic drop-in replacement for <code class="code docutils literal"><span class="pre">lm()</span></code> or <code class="code docutils literal"><span class="pre">glmer()</span></code> in R.</p>
@@ -217,7 +217,7 @@
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
 <p>Requires a working installation of <em>both</em> Python (2.7 or 3.6) and R (&gt;= 3.2.4).</p>
 <p>You will also need the <code class="code docutils literal"><span class="pre">lme4</span></code>, <code class="code docutils literal"><span class="pre">lmerTest</span></code>, and <code class="code docutils literal"><span class="pre">lsmeans</span></code> R packages installed.</p>
-<p>This package will not install R or R packages for you!</p>
+<p><em>This package will not install R or R packages for you!</em></p>
 <ol class="arabic simple">
 <li>Method 1 - Install from PyPi (stable)</li>
 </ol>
@@ -230,6 +230,40 @@
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">git</span><span class="o">+</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">ejolly</span><span class="o">/</span><span class="n">pymer4</span>
 </pre></div>
 </div>
+<div class="section" id="install-issues">
+<h3>Install issues<a class="headerlink" href="#install-issues" title="Permalink to this headline">¶</a></h3>
+<p>Some users have issues installing <code class="docutils literal"><span class="pre">pymer4</span></code> on recent versions of macOS. This is due to compiler issues that give <code class="docutils literal"><span class="pre">rpy2</span></code> (a package dependency of <code class="docutils literal"><span class="pre">pymer4</span></code>) some issues during install. Here’s a fix that should work for that:</p>
+<ol class="arabic">
+<li><p class="first">Install <a class="reference external" href="https://brew.sh/">homebrew</a> if you don’t have it already by running the command at the link (it’s a great pacakage manager for macOS). To check if you already have it, do <code class="docutils literal"><span class="pre">which</span> <span class="pre">brew</span></code> in your Terminal. If nothing pops up you don’t have it.</p>
+</li>
+<li><p class="first">Fix brew permissions: <code class="docutils literal"><span class="pre">sudo</span> <span class="pre">chown</span> <span class="pre">-R</span> <span class="pre">$(whoami)</span> <span class="pre">$(brew</span> <span class="pre">--prefix)/*</span></code> (this is <strong>necessary</strong> on macOS Sierra or higher (&gt;= macOS 10.12))</p>
+</li>
+<li><p class="first">Update homebrew <code class="docutils literal"><span class="pre">brew</span> <span class="pre">update</span></code></p>
+</li>
+<li><p class="first">Install an updated compiler: <code class="docutils literal"><span class="pre">brew</span> <span class="pre">install</span> <span class="pre">gcc</span></code>, or if you have homebrew already, <code class="docutils literal"><span class="pre">brew</span> <span class="pre">upgrade</span> <span class="pre">gcc</span></code></p>
+</li>
+<li><p class="first">Enable the new compiler for use:</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">CC</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>find <span class="sb">`</span>brew info gcc <span class="p">|</span> grep usr <span class="p">|</span> sed <span class="s1">&#39;s/(.*//&#39;</span> <span class="p">|</span> awk <span class="s1">&#39;{printf $1&quot;/bin&quot;}&#39;</span><span class="sb">`</span> -name <span class="s1">&#39;x86*gcc-7&#39;</span><span class="k">)</span><span class="s2">&quot;</span>
+<span class="nb">export</span> <span class="nv">CFLAGS</span><span class="o">=</span><span class="s2">&quot;-W&quot;</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">If the above results in any error output (it should return nothing) you might need to manually find out where the new compiler is installed. To do so use <code class="docutils literal"><span class="pre">brew</span> <span class="pre">info</span> <span class="pre">gcc</span></code> and <code class="docutils literal"><span class="pre">cd</span></code> into the directory that begins with <code class="docutils literal"><span class="pre">/usr</span></code> in the output of that command. From there <code class="docutils literal"><span class="pre">cd</span></code> into <code class="docutils literal"><span class="pre">bin</span></code> and look for a file that begins with <code class="docutils literal"><span class="pre">x86</span></code> and ends with <code class="docutils literal"><span class="pre">gcc-7</span></code>. Copy the <em>full path</em> to that file and run the following:</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">CC</span><span class="o">=</span> pathYouCopiedInQuotes
+<span class="nb">export</span> <span class="nv">CFLAGS</span><span class="o">=</span><span class="s2">&quot;-W&quot;</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">Finally install <code class="docutils literal"><span class="pre">rpy2</span></code> using the new compiler you just installed: <code class="docutils literal"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">rpy2==2.8.6</span></code></p>
+</li>
+<li><p class="first">Now you should be able to <code class="docutils literal"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">pymer4</span></code>:)</p>
+</li>
+</ol>
+</div>
 </div>
 <div class="section" id="basic-usage-guide">
 <h2>Basic Usage Guide<a class="headerlink" href="#basic-usage-guide" title="Permalink to this headline">¶</a></h2>
@@ -239,6 +273,7 @@
 <li class="toctree-l2"><a class="reference internal" href="usage.html#estimate-a-standard-regression-model">Estimate a standard regression model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="usage.html#estimate-a-multi-level-model">Estimate a multi-level model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="usage.html#inspect-random-effects">Inspect random effects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#inspect-other-attributes">Inspect other attributes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="usage.html#inspect-overall-fit">Inspect overall fit</a></li>
 </ul>
 </li>

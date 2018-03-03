@@ -95,6 +95,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#estimate-a-standard-regression-model">Estimate a standard regression model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#estimate-a-multi-level-model">Estimate a multi-level model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#inspect-random-effects">Inspect random effects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#inspect-other-attributes">Inspect other attributes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#inspect-overall-fit">Inspect overall fit</a></li>
 </ul>
 </li>
@@ -245,7 +246,11 @@
 </pre></div>
 </div>
 <img alt="_images/ranef_plot.png" src="_images/ranef_plot.png" />
-<p>If the model contains more than one predictor variable (unlike above) this plot will visualize a single predictor conditioned on the <em>mean</em> value of every other model term.</p>
+<p>If the model contains more than one predictor variable (unlike above) this plot will visualize a single predictor while other predictors are held constant.</p>
+</div>
+<div class="section" id="inspect-other-attributes">
+<h2>Inspect other attributes<a class="headerlink" href="#inspect-other-attributes" title="Permalink to this headline">¶</a></h2>
+<p>Other model attributes are also conveniently accessible after fitting a model. For example, <code class="docutils literal"><span class="pre">model.data</span></code> contains a copy of the original dataframe used to fit the model, <em>plus</em> columns for model predictions and residuals and <code class="docutils literal"><span class="pre">model.coefs</span></code> contains fitted parameters. Generally you can see what other model properties are available by typing <code class="docutils literal"><span class="pre">model.</span></code> and pressing <code class="docutils literal"><span class="pre">tab</span></code> to see the list of attributes (and methods). This works for both <code class="docutils literal"><span class="pre">Lm()</span></code> and <code class="docutils literal"><span class="pre">Lmer()</span></code> models.</p>
 </div>
 <div class="section" id="inspect-overall-fit">
 <h2>Inspect overall fit<a class="headerlink" href="#inspect-overall-fit" title="Permalink to this headline">¶</a></h2>
