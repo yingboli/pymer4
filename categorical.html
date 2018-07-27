@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Categorical Predictors &mdash; pymer4 0.4.0 documentation</title>
+  <title>Categorical Predictors &mdash; pymer4 0.5.0 documentation</title>
   
 
   
@@ -35,8 +35,8 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="pymer4 0.4.0 documentation" href="index.html"/>
-        <link rel="next" title="Simulating Data" href="simulate.html"/>
+    <link rel="top" title="pymer4 0.5.0 documentation" href="index.html"/>
+        <link rel="next" title="ANOVA tables and post-hoc comparisons" href="post_hoc.html"/>
         <link rel="prev" title="Basic Usage Guide" href="usage.html"/> 
 
   
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.4.0
+                0.5.0
               </div>
             
           
@@ -99,9 +99,14 @@
 <li class="toctree-l2"><a class="reference internal" href="#multi-level-models">Multi-level Models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#dummy-coding-factors">Dummy coding factors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#polynomial-contrast-coding">Polynomial contrast coding</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#custom-parameterizations">Custom parameterizations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#custom-contrasts">Custom contrasts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#simpler-custom-contrasts">(Simpler) Custom contrasts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-contrasts-in-r-work">How contrasts in R work</a></li>
 </ul>
 </li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="post_hoc.html">ANOVA tables and post-hoc comparisons</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="simulate.html">Simulating Data</a></li>
@@ -203,10 +208,11 @@
 </div>
 <div class="section" id="multi-level-models">
 <h2>Multi-level Models<a class="headerlink" href="#multi-level-models" title="Permalink to this headline">¶</a></h2>
-<p><code class="code docutils literal"><span class="pre">Lmer()</span></code> models currently have support for handling categorical predictors in one of two ways based on how R’s <code class="code docutils literal"><span class="pre">factor()</span></code> works:</p>
+<p><code class="code docutils literal"><span class="pre">Lmer()</span></code> models currently have support for handling categorical predictors in one of three ways based on how R’s <code class="code docutils literal"><span class="pre">factor()</span></code> works:</p>
 <ol class="arabic simple">
 <li>Dummy-coded factor levels (treatment contrasts) in which each model term is the difference between a factor level and a selected reference level</li>
 <li>Orthogonal polynomial contrasts in which each model term is a polynomial contrast across factor levels (e.g. linear, quadratic, cubic, etc)</li>
+<li>Custom contrasts for each level of a factor, which should be provide in the manner expected by R.</li>
 </ol>
 <p>To make re-parameterizing models easier, factor codings are passed as an argument to a model’s <code class="code docutils literal"><span class="pre">fit</span></code> method. This obviates the need for adjusting data-frame properties as in R.</p>
 </div>
@@ -242,9 +248,26 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="custom-parameterizations">
-<h2>Custom parameterizations<a class="headerlink" href="#custom-parameterizations" title="Permalink to this headline">¶</a></h2>
-<p>Unlike the methods above, testing specific parameterizations without relying on factor coding is often easier done by creating new columns in a dataframe with specific coding schemes. These new columns can be utilized within models to test specific hypotheses. <em>Note: this is also a useful approach if you don’t want to use patsy’s formula langauge with standard regression models as noted above</em>.</p>
+<div class="section" id="custom-contrasts">
+<h2>Custom contrasts<a class="headerlink" href="#custom-contrasts" title="Permalink to this headline">¶</a></h2>
+<p><code class="code docutils literal"><span class="pre">Lmer()</span></code> models can also take custom factor contrasts based on how they are expected by R. Remember that there can be at most k-1 model terms representing any k level factor without over-parameterizing a model. If all that’s desired is a specific contrast between factor levels (e.g. rather than all possible k-1 contrasts) you have 2 options:</p>
+<ol class="arabic simple">
+<li>Specify a custom contrast using the syntax below (also available in the <code class="code docutils literal"><span class="pre">model.fit()</span></code> method help). This will guarantee that one of your model terms reflects your desired contrast, and R will generate set of orthogonal contrasts for the rest of your model terms.</li>
+</ol>
+<p><strong>Example</strong>
+Compare level ‘1.0’ in ‘IV3’ to the mean of levels ‘0.5’ and ‘1.5’</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">factors</span><span class="o">=</span><span class="p">{</span>
+    <span class="s1">&#39;IV3&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;1.0&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;0.5&#39;</span><span class="p">:</span> <span class="o">-.</span><span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;1.5&#39;</span><span class="p">:</span> <span class="o">-.</span><span class="mi">5</span><span class="p">}</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li>Fit a model with <em>only</em> the desired contrast rather than a full set of k-1 contrasts. Contrary to how statistics is usually taught, you don’t ever <em>have to</em> include a full set of k-1 contrasts for a k level factor! Follow the directions below to do this (section: “simpler” custom contrasts). The upside is you won’t need to rely on R to compute anything for you (aside from the model fit), and you will have a model with exactly the number of terms as contrasts you desire giving you complete control. The downside is that <code class="code docutils literal"><span class="pre">model.post_hoc()</span></code> methods will not be able to do pairwise comparisons as they rely on R’s internal representation of factor levels.</li>
+</ol>
+</div>
+<div class="section" id="simpler-custom-contrasts">
+<h2>(Simpler) Custom contrasts<a class="headerlink" href="#simpler-custom-contrasts" title="Permalink to this headline">¶</a></h2>
+<p>Testing specific parameterizations without relying on R’s factor coding is often easier done by creating new columns in a dataframe with specific coding schemes. These new columns can be utilized within models to test specific hypotheses. However, the downside of this approach is that the <code class="code docutils literal"><span class="pre">model.post_hoc()</span></code> method will no longer be able estimate simple-effects because it will not be able to group factor levels automatically.  <em>Note: this is also a useful approach if you don’t want to use patsy’s formula langauge with standard regression models as noted above</em>.</p>
 <p>This is trivial using pandas map and assign methods. Here we’ll only build a linear contrast across factor levels (0.5 &lt; 1.0 &lt; 1.5), without all exhaustive higher level polynomial terms:</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span>
 <span class="n">IV_3_custom_lin</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;IV3&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">({</span>
@@ -262,6 +285,11 @@
 </pre></div>
 </div>
 </div>
+<div class="section" id="how-contrasts-in-r-work">
+<h2>How contrasts in R work<a class="headerlink" href="#how-contrasts-in-r-work" title="Permalink to this headline">¶</a></h2>
+<p><em>This is just for folks curious about how contrasts in R work</em>.
+Specifying multiple custom contrasts in R has always been a point of confusion amongst users. This because the <code class="code docutils literal"><span class="pre">contrasts()</span></code> command in R doesn’t actually expect contrast weights (i.e. a design matrix) as one would intuit. Rather, it is made for generating contrast coding schemes which are the inverse of the contrast weight matrix. For a longer explanation with examples see <a class="reference external" href="https://rstudio-pubs-static.s3.amazonaws.com/65059_586f394d8eb84f84b1baaf56ffb6b47f.html">this reference</a> and <a class="reference external" href="https://github.com/ejolly/R/blob/master/Guides/Contrasts_in_R.md">this reference</a>. For these situations pymer4 offers a few utility functions to convert between these matrix types if desired in <code class="code docutils literal"><span class="pre">pymer4.utils</span></code>: <code class="code docutils literal"><span class="pre">R2con</span></code> and <code class="code docutils literal"><span class="pre">con2R</span></code>.</p>
+</div>
 </div>
 
 
@@ -274,7 +302,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="simulate.html" class="btn btn-neutral float-right" title="Simulating Data" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="post_hoc.html" class="btn btn-neutral float-right" title="ANOVA tables and post-hoc comparisons" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="usage.html" class="btn btn-neutral" title="Basic Usage Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -308,7 +336,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.4.0',
+            VERSION:'0.5.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

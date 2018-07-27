@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Basic Usage Guide &mdash; pymer4 0.4.0 documentation</title>
+  <title>Basic Usage Guide &mdash; pymer4 0.5.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="pymer4 0.4.0 documentation" href="index.html"/>
+    <link rel="top" title="pymer4 0.5.0 documentation" href="index.html"/>
         <link rel="next" title="Categorical Predictors" href="categorical.html"/>
         <link rel="prev" title="Pymer4" href="index.html"/> 
 
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.4.0
+                0.5.0
               </div>
             
           
@@ -94,6 +94,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Basic Usage Guide</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#estimate-a-standard-regression-model">Estimate a standard regression model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#estimate-a-multi-level-model">Estimate a multi-level model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#visualize-model-summary">Visualize model summary</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#inspect-random-effects">Inspect random effects</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#inspect-other-attributes">Inspect other attributes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#inspect-overall-fit">Inspect overall fit</a></li>
@@ -102,6 +103,9 @@
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="categorical.html">Categorical Predictors</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="post_hoc.html">ANOVA tables and post-hoc comparisons</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="simulate.html">Simulating Data</a></li>
@@ -221,7 +225,7 @@
 </div>
 <div class="section" id="estimate-a-multi-level-model">
 <h2>Estimate a multi-level model<a class="headerlink" href="#estimate-a-multi-level-model" title="Permalink to this headline">¶</a></h2>
-<p>Fitting a multi-level model works similarily.</p>
+<p>Fitting a multi-level model works similarly.</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Initialize model instance</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">Lmer</span><span class="p">(</span><span class="s1">&#39;DV ~ IV2 + (IV2|Group)&#39;</span><span class="p">,</span><span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">)</span>
 
@@ -231,6 +235,14 @@
 </div>
 <img alt="_images/simple_summary_lmm.png" src="_images/simple_summary_lmm.png" />
 </div>
+<div class="section" id="visualize-model-summary">
+<h2>Visualize model summary<a class="headerlink" href="#visualize-model-summary" title="Permalink to this headline">¶</a></h2>
+<p>We can visualize the coefficients with 95% confidence intervals, and cluster level estimates overlaid.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">plot_summary</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="_images/plot_summary_lmm.png" src="_images/plot_summary_lmm.png" />
+</div>
 <div class="section" id="inspect-random-effects">
 <h2>Inspect random effects<a class="headerlink" href="#inspect-random-effects" title="Permalink to this headline">¶</a></h2>
 <p>We can look at the cluster level parameters easily as they are stored within the model object itself.</p>
@@ -239,7 +251,7 @@
 </div>
 <img alt="_images/simple_fixef.png" src="_images/simple_fixef.png" />
 <p>Each row here is a unique intercept and slope, which vary because we parameterized our random effects that way above.</p>
-<p>We can also plot these values with respect to the population parameters above.</p>
+<p>We can also plot these values with respect to the population parameters above in a slightly different way than the forest plot above.</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="s1">&#39;IV2&#39;</span><span class="p">,</span>
            <span class="n">plot_ci</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
            <span class="n">ylabel</span><span class="o">=</span> <span class="s1">&#39;Predicted DV&#39;</span><span class="p">)</span>
@@ -319,7 +331,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.4.0',
+            VERSION:'0.5.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

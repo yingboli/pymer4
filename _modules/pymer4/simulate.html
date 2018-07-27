@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>pymer4.simulate &mdash; pymer4 0.4.0 documentation</title>
+  <title>pymer4.simulate &mdash; pymer4 0.5.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="pymer4 0.4.0 documentation" href="../../index.html"/>
+    <link rel="top" title="pymer4 0.5.0 documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.4.0
+                0.5.0
               </div>
             
           
@@ -94,6 +94,9 @@
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../categorical.html">Categorical Predictors</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../post_hoc.html">ANOVA tables and post-hoc comparisons</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../simulate.html">Simulating Data</a></li>
@@ -174,6 +177,7 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">scipy.spatial.distance</span> <span class="k">import</span> <span class="n">squareform</span>
+<span class="kn">from</span> <span class="nn">pymer4.utils</span> <span class="k">import</span> <span class="n">discrete_inverse_logit</span><span class="p">,</span> <span class="n">isPSD</span><span class="p">,</span> <span class="n">nearestPSD</span>
 
 <span class="n">__all__</span>  <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;easy_multivariate_normal&#39;</span><span class="p">,</span>
             <span class="s1">&#39;simulate_lm&#39;</span><span class="p">,</span>
@@ -182,10 +186,10 @@
 <span class="n">__author__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Eshin Jolly&#39;</span><span class="p">]</span>
 <span class="n">__license__</span> <span class="o">=</span> <span class="s2">&quot;MIT&quot;</span>
 
-<div class="viewcode-block" id="simulate_lm"><a class="viewcode-back" href="../../api.html#pymer4.simulate.simulate_lm">[docs]</a><span class="k">def</span> <span class="nf">simulate_lm</span><span class="p">(</span><span class="n">num_obs</span><span class="p">,</span><span class="n">num_coef</span><span class="p">,</span><span class="n">coef_vals</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">corrs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">mus</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span><span class="n">sigmas</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span><span class="n">noise_params</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span><span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="simulate_lm"><a class="viewcode-back" href="../../api.html#pymer4.simulate.simulate_lm">[docs]</a><span class="k">def</span> <span class="nf">simulate_lm</span><span class="p">(</span><span class="n">num_obs</span><span class="p">,</span><span class="n">num_coef</span><span class="p">,</span><span class="n">coef_vals</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">corrs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">mus</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span><span class="n">sigmas</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span><span class="n">noise_params</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span><span class="n">family</span><span class="o">=</span><span class="s1">&#39;gaussian&#39;</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Function to quickly simulate a regression model dataset, with continuous predictors.</span>
-<span class="sd">    Provided a number of observations, number of coefficients, and optionally correlations between predictors, means, and standard deviations of predictors, returns a pandas dataframe with simulated data that can be used to estimate a linear regression using Lm().</span>
+<span class="sd">    Provided a number of observations, number of coefficients, and optionally correlations between predictors, means, and standard deviations of predictors, returns a pandas dataframe with simulated data that can be used to estimate a linear regression using Lm(). Using the family=&#39;binomial&#39; argument can generate discrete dependent variable values for use with logistic regression.</span>
 
 <span class="sd">    Defaults to returning standard normal (mu = 0; sigma = 1) predictors with no explicit correlations.</span>
 
@@ -197,6 +201,7 @@
 <span class="sd">        mus (float/list/ndarray): means of columns of predictors</span>
 <span class="sd">        sigmas (float/list/ndarray): stds of columns of predictors</span>
 <span class="sd">        noise_params (tup, optional): mean and std of noise added to simulated data</span>
+<span class="sd">        family (str): distribution family for the dependent variable. Currently only &#39;gaussian&#39; (continuous DV) or &#39;binomial&#39; (discrete DV) are available.</span>
 <span class="sd">        seed (int): seed for reproducible random number generation</span>
 
 <span class="sd">    Returns:</span>
@@ -210,7 +215,7 @@
     <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">coef_vals</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">coef_vals</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">coef_vals</span><span class="p">)</span> <span class="o">-</span> <span class="n">num_coef</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Missing one coefficient value. Did you provide a value for the intercept term?&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -227,7 +232,7 @@
     <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">noise_params</span><span class="p">,</span><span class="nb">tuple</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">noise_params</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;noise_params should be a tuple of (mean,std)&quot;</span>
 
     <span class="c1"># Generate random design matrix</span>
-    <span class="k">if</span> <span class="n">corrs</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">corrs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">X</span> <span class="o">=</span> <span class="n">easy_multivariate_normal</span><span class="p">(</span><span class="n">num_obs</span><span class="p">,</span><span class="n">num_coef</span><span class="p">,</span><span class="n">corrs</span><span class="p">,</span><span class="n">mus</span><span class="p">,</span><span class="n">sigmas</span><span class="p">,</span><span class="n">seed</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">mus</span><span class="p">,</span><span class="n">sigmas</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">num_obs</span><span class="p">,</span><span class="n">num_coef</span><span class="p">))</span>
@@ -235,17 +240,19 @@
     <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">num_obs</span><span class="p">,</span><span class="mi">1</span><span class="p">)),</span><span class="n">X</span><span class="p">])</span>
     <span class="c1"># Generate data</span>
     <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">b</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="o">*</span><span class="n">noise_params</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="n">num_obs</span><span class="p">)</span>
-
+    <span class="c1"># Apply transform if not linear model</span>
+    <span class="k">if</span> <span class="n">family</span> <span class="o">==</span> <span class="s1">&#39;binomial&#39;</span><span class="p">:</span>
+        <span class="n">Y</span> <span class="o">=</span> <span class="n">discrete_inverse_logit</span><span class="p">(</span><span class="n">Y</span><span class="p">)</span>
     <span class="n">dat</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">Y</span><span class="p">,</span><span class="n">X</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:]]),</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;DV&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;IV&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">elem</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">)])</span>
 
     <span class="k">return</span> <span class="n">dat</span><span class="p">,</span><span class="n">b</span></div>
 
-<div class="viewcode-block" id="simulate_lmm"><a class="viewcode-back" href="../../api.html#pymer4.simulate.simulate_lmm">[docs]</a><span class="k">def</span> <span class="nf">simulate_lmm</span><span class="p">(</span><span class="n">num_obs</span><span class="p">,</span><span class="n">num_coef</span><span class="p">,</span><span class="n">num_grps</span><span class="p">,</span><span class="n">coef_vals</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">corrs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">grp_sigmas</span><span class="o">=.</span><span class="mi">25</span><span class="p">,</span><span class="n">mus</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span><span class="n">sigmas</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span><span class="n">noise_params</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span><span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="simulate_lmm"><a class="viewcode-back" href="../../api.html#pymer4.simulate.simulate_lmm">[docs]</a><span class="k">def</span> <span class="nf">simulate_lmm</span><span class="p">(</span><span class="n">num_obs</span><span class="p">,</span><span class="n">num_coef</span><span class="p">,</span><span class="n">num_grps</span><span class="p">,</span><span class="n">coef_vals</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">corrs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">grp_sigmas</span><span class="o">=.</span><span class="mi">25</span><span class="p">,</span><span class="n">mus</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span><span class="n">sigmas</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span><span class="n">noise_params</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span><span class="n">family</span><span class="o">=</span><span class="s1">&#39;gaussian&#39;</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Function to quickly simulate a multi-level regression model dataset, with continuous predictors.</span>
 <span class="sd">    Provided a number of observations, number of coefficients, number of groups/clusters,</span>
 <span class="sd">    and optionally correlations between predictors, means, and standard deviations of predictors,</span>
-<span class="sd">    returns a pandas dataframe with simulated data that can be used to estimate a multi-level model using Lmer().</span>
+<span class="sd">    returns a pandas dataframe with simulated data that can be used to estimate a multi-level model using Lmer(). Using the family=&#39;binomial&#39; argument can generate discrete dependent variable values for use with logistic multi-level models.</span>
 
 <span class="sd">    Defaults to returning standard normal (mu = 0; sigma = 1) predictors with no explicit correlations and low variance between</span>
 <span class="sd">    groups (sigma = .25).</span>
@@ -257,10 +264,11 @@
 <span class="sd">        coef_vals (list,optional): &quot;true&quot; values of coefficients to generate data. If not provided will be randomly generated. Must include a coefficient for the intercept as well (i.e. mean of data)</span>
 <span class="sd">        corrs (ndarray,list,float): correlations between coefficients provided as 2d num_coef x num_coef, 1d flattend numpy array/list of length (num_features * (num_features-1)) / 2, or a float to be treated</span>
 <span class="sd">        as the same correlation between all coefficients</span>
-<span class="sd">        grp_sigmas (int or list): grp level std around population coefficient values; can be a single value in which case same std is applied around all coefficients or a list for different std; default 0</span>
+<span class="sd">        grp_sigmas (int or list): grp level std around population coefficient values; can be a single value in which case same std is applied around all coefficients or a list for different std; default .25</span>
 <span class="sd">        mus (float/list/ndarray): means of columns of predictors</span>
 <span class="sd">        sigmas (float/list/ndarray): stds of columns of predictors</span>
 <span class="sd">        noise_params (tup, optional): mean and std of noise added to each group&#39;s simulated data</span>
+<span class="sd">        family (str): distribution family for the dependent variable. Currently only &#39;gaussian&#39; (continuous DV) or &#39;binomial&#39; (discrete DV) are available.</span>
 <span class="sd">        seed (int): seed for reproducible random number generation</span>
 
 <span class="sd">    Returns:</span>
@@ -308,6 +316,8 @@
         <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">num_obs</span><span class="p">,</span><span class="mi">1</span><span class="p">)),</span><span class="n">x</span><span class="p">])</span>
         <span class="c1"># Use blups to generate group data</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">blups</span><span class="p">[</span><span class="n">grp</span><span class="p">,:])</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="o">*</span><span class="n">noise_params</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="n">num_obs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">family</span> <span class="o">==</span> <span class="s1">&#39;binomial&#39;</span><span class="p">:</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">discrete_inverse_logit</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">grp</span> <span class="o">==</span><span class="mi">0</span><span class="p">:</span>
             <span class="n">x_all</span><span class="p">,</span><span class="n">y_all</span> <span class="o">=</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span>
         <span class="k">else</span><span class="p">:</span>
@@ -318,20 +328,21 @@
 
     <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">y_all</span><span class="p">,</span><span class="n">x_all</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:],</span><span class="n">grp_ids</span><span class="p">]),</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;DV&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;IV&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">elem</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x_all</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;Group&#39;</span><span class="p">])</span>
     <span class="n">blups</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">blups</span><span class="p">,</span><span class="n">columns</span><span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Intercept&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;IV&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">elem</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x_all</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">)],</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Grp&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">elem</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_grps</span><span class="p">)])</span>
-
     <span class="k">return</span> <span class="n">data</span><span class="p">,</span> <span class="n">blups</span><span class="p">,</span> <span class="n">b</span></div>
 
-<div class="viewcode-block" id="easy_multivariate_normal"><a class="viewcode-back" href="../../api.html#pymer4.simulate.easy_multivariate_normal">[docs]</a><span class="k">def</span> <span class="nf">easy_multivariate_normal</span><span class="p">(</span><span class="n">num_obs</span><span class="p">,</span> <span class="n">num_features</span><span class="p">,</span> <span class="n">corrs</span><span class="p">,</span> <span class="n">mu</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">sigma</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="easy_multivariate_normal"><a class="viewcode-back" href="../../api.html#pymer4.simulate.easy_multivariate_normal">[docs]</a><span class="k">def</span> <span class="nf">easy_multivariate_normal</span><span class="p">(</span><span class="n">num_obs</span><span class="p">,</span> <span class="n">num_features</span><span class="p">,</span> <span class="n">corrs</span><span class="p">,</span> <span class="n">mu</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">sigma</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">seed</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span><span class="n">forcePSD</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">return_new_corrs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">nit</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Function to more easily generate multivariate normal samples provided a correlation matrix or list of correlations (upper triangle of correlation matrix) instead of a covariance matrix.</span>
-<span class="sd">    Defaults to returning approximately standard normal (mu = 0; sigma = 1) variates.</span>
+<span class="sd">    Function to more easily generate multivariate normal samples provided a correlation matrix or list of correlations (upper triangle of correlation matrix) instead of a covariance matrix. Defaults to returning approximately standard normal (mu = 0; sigma = 1) variates. Unlike numpy, if the desired correlation matrix is not positive-semi-definite, will by default issue a warning and find the nearest PSD correlation matrix and generate data with this matrix. This new matrix can optionally be returned used the return_new_corrs argument.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        num_obs (int): number of observations/samples to generate (rows)</span>
-<span class="sd">        corrs (ndarray): num_features x num_features or flattend numpy array of length (num_features * (num_features-1)) / 2</span>
+<span class="sd">        corrs (ndarray/list/float): num_features x num_features 2d array, flattend numpy array of length (num_features * (num_features-1)) / 2, or scalar for same correlation on all off-diagonals</span>
 <span class="sd">        num_features (int): number of features/variables/dimensions to generate (columns)</span>
 <span class="sd">        mu (float/list): mean of each feature across observations; default 0.0</span>
 <span class="sd">        sigma (float/list): sd of each feature across observations; default 1.0</span>
+<span class="sd">        forcePD (bool): whether to find and use a new correlation matrix if the requested one is not positive semi-definite; default False</span>
+<span class="sd">        return_new_corrs (bool): return the nearest correlation matrix that is positive semi-definite used to generate data; default False</span>
+<span class="sd">        nit (int): number of iterations to search for the nearest positive-semi-definite correlation matrix is the requested correlation matrix is not PSD; default 100</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        ndarray: correlated data as num_obs x num_features array</span>
@@ -349,7 +360,6 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">sigma</span> <span class="o">=</span> <span class="p">[</span><span class="n">sigma</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_features</span>
 
-
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">corrs</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">and</span> <span class="n">corrs</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
         <span class="k">assert</span> <span class="n">corrs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">corrs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">corrs</span><span class="p">,</span><span class="n">corrs</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diagonal</span><span class="p">(</span><span class="n">corrs</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diagonal</span><span class="p">(</span><span class="n">corrs</span><span class="p">))),</span> <span class="s2">&quot;Correlation matrix must be square symmetric&quot;</span>
     <span class="k">elif</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">corrs</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">and</span> <span class="n">corrs</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">corrs</span><span class="p">,</span><span class="nb">list</span><span class="p">):</span>
@@ -363,14 +373,28 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Correlations must be num_features x num_feature, flattend numpy array/list or scalar&quot;</span><span class="p">)</span>
 
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">isPSD</span><span class="p">(</span><span class="n">corrs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">forcePSD</span><span class="p">:</span>
+            <span class="c1"># Tell user their correlations are being recomputed if they didnt ask to save them as they might not realize</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">return_new_corrs</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Correlation matrix is not positive semi-definite. Solved for new correlation matrix.&quot;</span><span class="p">)</span>
+            <span class="n">_corrs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">nearestPSD</span><span class="p">(</span><span class="n">corrs</span><span class="p">,</span> <span class="n">nit</span><span class="p">))</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Correlation matrix is not positive semi-definite. Pymer4 will not generate inaccurate multivariate data. Use the forcePD argument to automatically solve for the closest desired correlation matrix.&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">_corrs</span> <span class="o">=</span> <span class="n">corrs</span>
+
     <span class="c1">#Rescale correlation matrix by variances, given standard deviations of features</span>
     <span class="n">sd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">sigma</span><span class="p">)</span>
     <span class="c1">#R * Vars = R * SD * SD</span>
-    <span class="n">cov</span> <span class="o">=</span> <span class="n">corrs</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">sd</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">sd</span><span class="p">))</span>
-
+    <span class="n">cov</span> <span class="o">=</span> <span class="n">_corrs</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">sd</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">sd</span><span class="p">))</span>
     <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">cov</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="n">num_obs</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">X</span></div>
+    <span class="k">if</span> <span class="n">return_new_corrs</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">_corrs</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">X</span></div>
 </pre></div>
 
            </div>
@@ -407,7 +431,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.4.0',
+            VERSION:'0.5.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

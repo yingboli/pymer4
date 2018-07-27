@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>API Reference &mdash; pymer4 0.4.0 documentation</title>
+  <title>API Reference &mdash; pymer4 0.5.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="pymer4 0.4.0 documentation" href="index.html"/>
+    <link rel="top" title="pymer4 0.5.0 documentation" href="index.html"/>
         <link rel="prev" title="Lme4 Random Effects Cheat Sheet" href="rfx_cheatsheet.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.4.0
+                0.5.0
               </div>
             
           
@@ -94,6 +94,9 @@
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="categorical.html">Categorical Predictors</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="post_hoc.html">ANOVA tables and post-hoc comparisons</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="simulate.html">Simulating Data</a></li>
@@ -210,8 +213,26 @@
 </tbody>
 </table>
 <dl class="method">
+<dt id="pymer4.models.Lmer.anova">
+<code class="descname">anova</code><span class="sig-paren">(</span><em>force_orthogonal=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymer4/models.html#Lmer.anova"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymer4.models.Lmer.anova" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a type-3 ANOVA table from a fitted model. Like R, this method does not ensure that contrasts are orthogonal to ensure correct type-3 SS computation. However, the force_orthogonal flag can refit the regression model with orthogonal polynomial contrasts automatically guaranteeing valid SS type 3 inferences. Note that this will overwrite factors specified in the last call to <cite>.fit()</cite></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>force_orthogonal</strong> (<em>bool</em>) – whether factors in the model should be recoded using polynomial contrasts to ensure valid type-3 SS calculations. If set to True, previous factor specifications will be saved in <cite>model.factors_prev_</cite>; default False</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Type 3 ANOVA results</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">anova_results (pd.DataFrame)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="pymer4.models.Lmer.fit">
-<code class="descname">fit</code><span class="sig-paren">(</span><em>conf_int='Wald'</em>, <em>factors=None</em>, <em>ordered=False</em>, <em>summarize=True</em>, <em>verbose=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymer4/models.html#Lmer.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymer4.models.Lmer.fit" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fit</code><span class="sig-paren">(</span><em>conf_int='Wald'</em>, <em>factors=None</em>, <em>permute=None</em>, <em>ordered=False</em>, <em>summarize=True</em>, <em>verbose=False</em>, <em>REML=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymer4/models.html#Lmer.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymer4.models.Lmer.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Main method for fitting model object. Will modify the model’s data attribute to add columns for residuals and fits for convenience.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -219,10 +240,12 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>conf_int</strong> (<em>str</em>) – which method to compute confidence intervals; ‘profile’, ‘Wald’ (default), or ‘boot’ (parametric bootstrap)</li>
-<li><strong>factors</strong> (<em>dict</em>) – col names (keys) to treat as dummy-coded factors with levels specified by unique values (vals). First level is always reference, e.g. {‘Col1’:[‘A’,’B’,’C’]}</li>
+<li><strong>factors</strong> (<em>dict</em>) – Keys should be column names in data to treat as factors. Values should either be a list containing unique variable levels if dummy-coding or polynomial coding is desired. Otherwise values should be another dictionary with unique variable levels as keys and desired contrast values (as specified in R!) as keys. See examples below</li>
+<li><strong>permute</strong> (<em>int</em>) – if non-zero, computes parameter significance tests by permuting test stastics rather than parametrically. Permutation is done by shuffling observations within clusters to respect random effects structure of data.</li>
 <li><strong>ordered</strong> (<em>bool</em>) – whether factors should be treated as ordered polynomial contrasts; this will parameterize a model with K-1 orthogonal polynomial regressors beginning with a linear contrast based on the factor order provided; default is False</li>
 <li><strong>summarize</strong> (<em>bool</em>) – whether to print a model summary after fitting; default is True</li>
 <li><strong>verbose</strong> (<em>bool</em>) – whether to print when and which model and confidence interval are being fitted</li>
+<li><strong>REML</strong> (<em>bool</em>) – whether to fit using restricted maximum likelihood estimation instead of maximum likelihood estimation; default True</li>
 </ul>
 </td>
 </tr>
@@ -234,6 +257,20 @@
 </tr>
 </tbody>
 </table>
+<p class="rubric">Examples</p>
+<p>The following examples demonstrate how to treat variables as categorical factors.</p>
+<p>Dummy-Coding: Treat Col1 as a factor which 3 levels: A, B, C. Use dummy-coding with A as the reference level. Model intercept will be mean of A, and parameters will be B-A, and C-A.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">factors</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Col1&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;B&#39;</span><span class="p">,</span><span class="s1">&#39;C&#39;</span><span class="p">]})</span>
+</pre></div>
+</div>
+<p>Orthogonal Polynomials: Treat Col1 as a factor which 3 levels: A, B, C. Estimate a linear contrast of C &gt; B &gt; A. Model intercept will be grand-mean of all levels, and parameters will be linear contrast, and orthogonal polynomial contrast (auto-computed).</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">factors</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Col1&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;B&#39;</span><span class="p">,</span><span class="s1">&#39;C&#39;</span><span class="p">]},</span> <span class="n">ordered</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Custom-contrast: Treat Col1 as a factor which 3 levels: A, B, C. Compare A to the mean of B and C. Model intercept will be the grand-mean of all levels, and parameters will be the desired contrast, a well as an automatically determined orthogonal contrast.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">factors</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Col1&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">:</span> <span class="o">-.</span><span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="o">-.</span><span class="mi">5</span><span class="p">}}))</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -293,17 +330,63 @@
 
 <dl class="method">
 <dt id="pymer4.models.Lmer.post_hoc">
-<code class="descname">post_hoc</code><span class="sig-paren">(</span><em>marginal_vars</em>, <em>grouping_vars=None</em>, <em>p_adjust='tukey'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymer4/models.html#Lmer.post_hoc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymer4.models.Lmer.post_hoc" title="Permalink to this definition">¶</a></dt>
+<code class="descname">post_hoc</code><span class="sig-paren">(</span><em>marginal_vars</em>, <em>grouping_vars=None</em>, <em>p_adjust='tukey'</em>, <em>summarize=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymer4/models.html#Lmer.post_hoc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymer4.models.Lmer.post_hoc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Post-hoc pair-wise tests corrected for multiple comparisons (Tukey method) implemented using the lsmeans package. This method provide both marginal means/trends along with marginal pairwise differences. More info can be found at: <a class="reference external" href="https://cran.r-project.org/web/packages/lsmeans/lsmeans.pdf">https://cran.r-project.org/web/packages/lsmeans/lsmeans.pdf</a></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>marginal_var</strong> (<em>str</em>) – what variable(s) to compute marginal means/trends for; unique combinations of factor levels of these variable(s) will determine family-wise error correction</li>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>marginal_var</strong> (<em>str/list</em>) – what variable(s) to compute marginal means/trends for; unique combinations of factor levels of these variable(s) will determine family-wise error correction</li>
 <li><strong>grouping_vars</strong> (<em>str/list</em>) – what variable(s) to group on. Trends/means/comparisons of other variable(s), will be computed at each level of these variable(s)</li>
 <li><strong>p_adjust</strong> (<em>str</em>) – multiple comparisons adjustment method. One of: tukey, bonf, fdr, hochberg, hommel, holm, dunnet, mvt (monte-carlo multi-variate T, aka exact tukey/dunnet). Default tukey</li>
+<li><strong>summarize</strong> (<em>bool</em>) – output effects and contrasts or don’t (always stored in model object as model.marginal_estimates and model.marginal_contrasts); default True</li>
 </ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">unique factor level effects (e.g. means/coefs)
+marginal_contrasts (pd.DataFrame): contrasts between factor levels</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">marginal_estimates (pd.Dataframe)</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<p>Pairwise comparison of means of A at each level of B</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">post_hoc</span><span class="p">(</span><span class="n">marginal_vars</span><span class="o">=</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="n">grouping_vars</span><span class="o">=</span><span class="s1">&#39;B&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Pairwise differences of slopes of C between levels of A at each level of B</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">post_hoc</span><span class="p">(</span><span class="n">marginal_vars</span><span class="o">=</span><span class="s1">&#39;C&#39;</span><span class="p">,</span><span class="n">grouping_vars</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;B&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Pairwise differences of each unique A,B cell</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">post_hoc</span><span class="p">(</span><span class="n">marginal_vars</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;B&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pymer4.models.Lmer.plot_summary">
+<code class="descname">plot_summary</code><span class="sig-paren">(</span><em>figsize=(12</em>, <em>6)</em>, <em>error_bars='ci'</em>, <em>ranef=True</em>, <em>xlim=None</em>, <em>intercept=True</em>, <em>ranef_alpha=0.5</em>, <em>coef_fmt='o'</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymer4/models.html#Lmer.plot_summary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymer4.models.Lmer.plot_summary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a forestplot overlaying estimated coefficients with random effects (i.e. BLUPs). By default display the 95% confidence intervals computed during fitting.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>error_bars</strong> (<em>str</em>) – one of ‘ci’ or ‘se’ to change which error bars are plotted; default ‘ci’</li>
+<li><strong>ranef</strong> (<em>bool</em>) – overlay BLUP estimates on figure; default True</li>
+<li><strong>xlim</strong> (<em>tuple</em>) – lower and upper xlimit of plot; default min and max of BLUPs</li>
+<li><strong>intercept</strong> (<em>bool</em>) – plot the intercept estimate; default True</li>
+<li><strong>ranef_alpha</strong> (<em>float</em>) – opacity of random effect points; default .5</li>
+<li><strong>coef_fmt</strong> (<em>str</em>) – matplotlib marker style for population coefficients</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">matplotlib axis handle</p>
 </td>
 </tr>
 </tbody>
@@ -330,8 +413,7 @@
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">matplotlib figure handle
-matplotlib axis handle</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">matplotlib axis handle</p>
 </td>
 </tr>
 </tbody>
@@ -377,19 +459,22 @@ matplotlib axis handle</p>
 </table>
 <dl class="method">
 <dt id="pymer4.models.Lm.fit">
-<code class="descname">fit</code><span class="sig-paren">(</span><em>robust=False</em>, <em>conf_int='standard'</em>, <em>permute=None</em>, <em>summarize=True</em>, <em>verbose=False</em>, <em>n_boot=500</em>, <em>n_jobs=-1</em>, <em>n_lags=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymer4/models.html#Lm.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymer4.models.Lm.fit" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fit</code><span class="sig-paren">(</span><em>robust=False</em>, <em>conf_int='standard'</em>, <em>permute=None</em>, <em>summarize=True</em>, <em>verbose=False</em>, <em>n_boot=500</em>, <em>n_jobs=-1</em>, <em>n_lags=1</em>, <em>cluster=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymer4/models.html#Lm.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymer4.models.Lm.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit a variety of OLS models. By default will fit a model that makes parametric assumptions (under a t-distribution) replicating the output of software like R. 95% confidence intervals (CIs) are also estimated parametrically by default. However, empirical bootstrapping can also be used to compute CIs; this procedure resamples with replacement from the data themselves, not residuals or data generated from fitted parameters.</p>
 <p>Alternatively, OLS robust to heteroscedasticity can be fit by computing sandwich standard error estimates. This is similar to Stata’s robust routine.
-Robust estimators include:
-- ‘hc0’: Huber (1980) original sandwich estimator
-- ‘hc3’: MacKinnon and White (1985) HC3 sandwich estimator; provides more robustness in smaller samples than hc0, Long &amp; Ervin (2000)
-- ‘hac’: Newey-West (1987) estimator for robustness to heteroscedasticity as well as serial auto-correlation at given lags.</p>
+Robust estimators include:</p>
+<ul class="simple">
+<li>‘hc0’: Huber (1980) original sandwich estimator</li>
+<li>‘hc3’: MacKinnon and White (1985) HC3 sandwich estimator; provides more robustness in smaller samples than hc0, Long &amp; Ervin (2000)</li>
+<li>‘hac’: Newey-West (1987) estimator for robustness to heteroscedasticity as well as serial auto-correlation at given lags.</li>
+<li>‘cluster’ : cluster-robust standard errors (see Cameron &amp; Miller 2015 for review). Provides robustness to errors that cluster according to specific groupings (e.g. repeated observations within a person/school/site). This acts as post-modeling “correction” for what a multi-level model explicitly estimates and is popular in the econometrics literature. DOF correction differs slightly from stat/statsmodels which use num_clusters - 1, where as pymer4 uses num_clusters - num_coefs</li>
+</ul>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>robust</strong> (<em>bool/str</em>) – whether to use heteroscedasticity robust s.e.and optionally which estimator type to use (‘hc0’,’hc3’,’hac’). If robust = True, default robust estimator is ‘hc0’; default False</li>
+<li><strong>robust</strong> (<em>bool/str</em>) – whether to use heteroscedasticity robust s.e. and optionally which estimator type to use (‘hc0’,’hc3’,’hac’,’cluster’). If robust = True, default robust estimator is ‘hc0’; default False</li>
 <li><strong>conf_int</strong> (<em>str</em>) – whether confidence intervals should be computed through bootstrap (‘boot’) or assuming a t-distribution (‘standard’); default ‘standard’</li>
 <li><strong>permute</strong> (<em>int</em>) – if non-zero, computes parameter significance tests by permuting t-stastics rather than parametrically; works with robust estimators</li>
 <li><strong>summarize</strong> (<em>bool</em>) – whether to print a model summary after fitting; default True</li>
@@ -397,6 +482,7 @@ Robust estimators include:
 <li><strong>n_boot</strong> (<em>int</em>) – how many bootstrap resamples to use for confidence intervals (ignored unless conf_int=’boot’)</li>
 <li><strong>n_jobs</strong> (<em>int</em>) – number of cores for parallelizing bootstrapping or permutations; default all cores</li>
 <li><strong>n_lags</strong> (<em>int</em>) – number of lags for robust estimator type ‘hac’ (ignored unless robust=’hac’); default 1</li>
+<li><strong>cluster</strong> (<em>str</em>) – column name identifying clusters/groups for robust estimator type ‘cluster’ (ignored unless robust=’cluster’)</li>
 </ul>
 </td>
 </tr>
@@ -416,6 +502,24 @@ Robust estimators include:
 <dd><p>Summarize the output of a fitted model.</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="pymer4.models.Lm.predict">
+<code class="descname">predict</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymer4/models.html#Lm.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymer4.models.Lm.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make predictions given new data. Input must be a dataframe that contains the same columns as the model.matrix excluding the intercept (i.e. all the predictor variables used to fit the model). Will automatically use/ignore intercept to make a prediction if it was/was not part of the original fitted model.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>pandas.core.frame.DataFrame</em>) – input data to make predictions on</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">prediction values</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">ndarray</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -423,9 +527,9 @@ Robust estimators include:
 <span id="pymer4-simulate-simulation"></span><h1><a class="reference internal" href="#module-pymer4.simulate" title="pymer4.simulate"><code class="xref py py-mod docutils literal"><span class="pre">pymer4.simulate</span></code></a>: Simulation<a class="headerlink" href="#module-pymer4.simulate" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="pymer4.simulate.simulate_lm">
-<code class="descclassname">pymer4.simulate.</code><code class="descname">simulate_lm</code><span class="sig-paren">(</span><em>num_obs</em>, <em>num_coef</em>, <em>coef_vals=None</em>, <em>corrs=None</em>, <em>mus=0.0</em>, <em>sigmas=1.0</em>, <em>noise_params=(0</em>, <em>1)</em>, <em>seed=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymer4/simulate.html#simulate_lm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymer4.simulate.simulate_lm" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pymer4.simulate.</code><code class="descname">simulate_lm</code><span class="sig-paren">(</span><em>num_obs</em>, <em>num_coef</em>, <em>coef_vals=None</em>, <em>corrs=None</em>, <em>mus=0.0</em>, <em>sigmas=1.0</em>, <em>noise_params=(0</em>, <em>1)</em>, <em>family='gaussian'</em>, <em>seed=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymer4/simulate.html#simulate_lm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymer4.simulate.simulate_lm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to quickly simulate a regression model dataset, with continuous predictors.
-Provided a number of observations, number of coefficients, and optionally correlations between predictors, means, and standard deviations of predictors, returns a pandas dataframe with simulated data that can be used to estimate a linear regression using Lm().</p>
+Provided a number of observations, number of coefficients, and optionally correlations between predictors, means, and standard deviations of predictors, returns a pandas dataframe with simulated data that can be used to estimate a linear regression using Lm(). Using the family=’binomial’ argument can generate discrete dependent variable values for use with logistic regression.</p>
 <p>Defaults to returning standard normal (mu = 0; sigma = 1) predictors with no explicit correlations.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -439,6 +543,7 @@ Provided a number of observations, number of coefficients, and optionally correl
 <li><strong>mus</strong> (<em>float/list/ndarray</em>) – means of columns of predictors</li>
 <li><strong>sigmas</strong> (<em>float/list/ndarray</em>) – stds of columns of predictors</li>
 <li><strong>noise_params</strong> (<em>tup</em><em>, </em><em>optional</em>) – mean and std of noise added to simulated data</li>
+<li><strong>family</strong> (<em>str</em>) – distribution family for the dependent variable. Currently only ‘gaussian’ (continuous DV) or ‘binomial’ (discrete DV) are available.</li>
 <li><strong>seed</strong> (<em>int</em>) – seed for reproducible random number generation</li>
 </ul>
 </td>
@@ -453,11 +558,11 @@ ground-truth coefficient values</p>
 
 <dl class="function">
 <dt id="pymer4.simulate.simulate_lmm">
-<code class="descclassname">pymer4.simulate.</code><code class="descname">simulate_lmm</code><span class="sig-paren">(</span><em>num_obs</em>, <em>num_coef</em>, <em>num_grps</em>, <em>coef_vals=None</em>, <em>corrs=None</em>, <em>grp_sigmas=0.25</em>, <em>mus=0.0</em>, <em>sigmas=1.0</em>, <em>noise_params=(0</em>, <em>1)</em>, <em>seed=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymer4/simulate.html#simulate_lmm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymer4.simulate.simulate_lmm" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pymer4.simulate.</code><code class="descname">simulate_lmm</code><span class="sig-paren">(</span><em>num_obs</em>, <em>num_coef</em>, <em>num_grps</em>, <em>coef_vals=None</em>, <em>corrs=None</em>, <em>grp_sigmas=0.25</em>, <em>mus=0.0</em>, <em>sigmas=1.0</em>, <em>noise_params=(0</em>, <em>1)</em>, <em>family='gaussian'</em>, <em>seed=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymer4/simulate.html#simulate_lmm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymer4.simulate.simulate_lmm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to quickly simulate a multi-level regression model dataset, with continuous predictors.
 Provided a number of observations, number of coefficients, number of groups/clusters,
 and optionally correlations between predictors, means, and standard deviations of predictors,
-returns a pandas dataframe with simulated data that can be used to estimate a multi-level model using Lmer().</p>
+returns a pandas dataframe with simulated data that can be used to estimate a multi-level model using Lmer(). Using the family=’binomial’ argument can generate discrete dependent variable values for use with logistic multi-level models.</p>
 <p>Defaults to returning standard normal (mu = 0; sigma = 1) predictors with no explicit correlations and low variance between
 groups (sigma = .25).</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -471,10 +576,11 @@ groups (sigma = .25).</p>
 <li><strong>coef_vals</strong> (<em>list</em><em>,</em><em>optional</em>) – “true” values of coefficients to generate data. If not provided will be randomly generated. Must include a coefficient for the intercept as well (i.e. mean of data)</li>
 <li><strong>corrs</strong> (<em>ndarray</em><em>,</em><em>list</em><em>,</em><em>float</em>) – correlations between coefficients provided as 2d num_coef x num_coef, 1d flattend numpy array/list of length (num_features * (num_features-1)) / 2, or a float to be treated</li>
 <li><strong>the same correlation between all coefficients</strong> (<em>as</em>) – </li>
-<li><strong>grp_sigmas</strong> (<em>int</em><em> or </em><em>list</em>) – grp level std around population coefficient values; can be a single value in which case same std is applied around all coefficients or a list for different std; default 0</li>
+<li><strong>grp_sigmas</strong> (<em>int</em><em> or </em><em>list</em>) – grp level std around population coefficient values; can be a single value in which case same std is applied around all coefficients or a list for different std; default .25</li>
 <li><strong>mus</strong> (<em>float/list/ndarray</em>) – means of columns of predictors</li>
 <li><strong>sigmas</strong> (<em>float/list/ndarray</em>) – stds of columns of predictors</li>
 <li><strong>noise_params</strong> (<em>tup</em><em>, </em><em>optional</em>) – mean and std of noise added to each group’s simulated data</li>
+<li><strong>family</strong> (<em>str</em>) – distribution family for the dependent variable. Currently only ‘gaussian’ (continuous DV) or ‘binomial’ (discrete DV) are available.</li>
 <li><strong>seed</strong> (<em>int</em>) – seed for reproducible random number generation</li>
 </ul>
 </td>
@@ -490,19 +596,21 @@ population coefficient values</p>
 
 <dl class="function">
 <dt id="pymer4.simulate.easy_multivariate_normal">
-<code class="descclassname">pymer4.simulate.</code><code class="descname">easy_multivariate_normal</code><span class="sig-paren">(</span><em>num_obs</em>, <em>num_features</em>, <em>corrs</em>, <em>mu=0.0</em>, <em>sigma=1.0</em>, <em>seed=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymer4/simulate.html#easy_multivariate_normal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymer4.simulate.easy_multivariate_normal" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function to more easily generate multivariate normal samples provided a correlation matrix or list of correlations (upper triangle of correlation matrix) instead of a covariance matrix.
-Defaults to returning approximately standard normal (mu = 0; sigma = 1) variates.</p>
+<code class="descclassname">pymer4.simulate.</code><code class="descname">easy_multivariate_normal</code><span class="sig-paren">(</span><em>num_obs</em>, <em>num_features</em>, <em>corrs</em>, <em>mu=0.0</em>, <em>sigma=1.0</em>, <em>seed=None</em>, <em>forcePSD=True</em>, <em>return_new_corrs=False</em>, <em>nit=100</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymer4/simulate.html#easy_multivariate_normal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymer4.simulate.easy_multivariate_normal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to more easily generate multivariate normal samples provided a correlation matrix or list of correlations (upper triangle of correlation matrix) instead of a covariance matrix. Defaults to returning approximately standard normal (mu = 0; sigma = 1) variates. Unlike numpy, if the desired correlation matrix is not positive-semi-definite, will by default issue a warning and find the nearest PSD correlation matrix and generate data with this matrix. This new matrix can optionally be returned used the return_new_corrs argument.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>num_obs</strong> (<em>int</em>) – number of observations/samples to generate (rows)</li>
-<li><strong>corrs</strong> (<em>ndarray</em>) – num_features x num_features or flattend numpy array of length (num_features * (num_features-1)) / 2</li>
+<li><strong>corrs</strong> (<em>ndarray/list/float</em>) – num_features x num_features 2d array, flattend numpy array of length (num_features * (num_features-1)) / 2, or scalar for same correlation on all off-diagonals</li>
 <li><strong>num_features</strong> (<em>int</em>) – number of features/variables/dimensions to generate (columns)</li>
 <li><strong>mu</strong> (<em>float/list</em>) – mean of each feature across observations; default 0.0</li>
 <li><strong>sigma</strong> (<em>float/list</em>) – sd of each feature across observations; default 1.0</li>
+<li><strong>forcePD</strong> (<em>bool</em>) – whether to find and use a new correlation matrix if the requested one is not positive semi-definite; default False</li>
+<li><strong>return_new_corrs</strong> (<em>bool</em>) – return the nearest correlation matrix that is positive semi-definite used to generate data; default False</li>
+<li><strong>nit</strong> (<em>int</em>) – number of iterations to search for the nearest positive-semi-definite correlation matrix is the requested correlation matrix is not PSD; default 100</li>
 </ul>
 </td>
 </tr>
@@ -523,6 +631,32 @@ Defaults to returning approximately standard normal (mu = 0; sigma = 1) variates
 <dt id="pymer4.utils.get_resource_path">
 <code class="descclassname">pymer4.utils.</code><code class="descname">get_resource_path</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymer4/utils.html#get_resource_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymer4.utils.get_resource_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get path sample data directory.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymer4.utils.discrete_inverse_logit">
+<code class="descclassname">pymer4.utils.</code><code class="descname">discrete_inverse_logit</code><span class="sig-paren">(</span><em>arr</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymer4/utils.html#discrete_inverse_logit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymer4.utils.discrete_inverse_logit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply a discretized inverse logit transform to an array of values. Useful for converting normally distributed values to binomial classes</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymer4.utils.isPSD">
+<code class="descclassname">pymer4.utils.</code><code class="descname">isPSD</code><span class="sig-paren">(</span><em>mat</em>, <em>tol=1e-08</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymer4/utils.html#isPSD"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymer4.utils.isPSD" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if matrix is positive-semi-definite by virtue of all its eigenvalues being &gt;= 0. The cholesky decomposition does not work for edge cases because np.linalg.cholesky fails on matrices with exactly 0 valued eigenvalues, whereas in Matlab this is not true, so that method appropriate. Ref: <a class="reference external" href="https://goo.gl/qKWWzJ">https://goo.gl/qKWWzJ</a></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pymer4.utils.nearestPSD">
+<code class="descclassname">pymer4.utils.</code><code class="descname">nearestPSD</code><span class="sig-paren">(</span><em>A</em>, <em>nit=100</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymer4/utils.html#nearestPSD"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymer4.utils.nearestPSD" title="Permalink to this definition">¶</a></dt>
+<dd><p>Higham (2000) algorithm to find the nearest positive semi-definite matrix that minimizes the Frobenius distance/norm. Sstatsmodels using something very similar in corr_nearest(), but with spectral SGD to search for a local minima. Reference: <a class="reference external" href="https://goo.gl/Eut7UU">https://goo.gl/Eut7UU</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>nit</strong> (<em>int</em>) – number of iterations to run algorithm; more iterations improves accuracy but increases computation time.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
@@ -569,7 +703,7 @@ Defaults to returning approximately standard normal (mu = 0; sigma = 1) variates
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.4.0',
+            VERSION:'0.5.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,

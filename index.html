@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Pymer4 &mdash; pymer4 0.4.0 documentation</title>
+  <title>Pymer4 &mdash; pymer4 0.5.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="pymer4 0.4.0 documentation" href="#"/>
+    <link rel="top" title="pymer4 0.5.0 documentation" href="#"/>
         <link rel="next" title="Basic Usage Guide" href="usage.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.4.0
+                0.5.0
               </div>
             
           
@@ -94,6 +94,9 @@
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="categorical.html">Categorical Predictors</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="post_hoc.html">ANOVA tables and post-hoc comparisons</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="simulate.html">Simulating Data</a></li>
@@ -171,7 +174,7 @@
             
   <div class="section" id="pymer4">
 <h1>Pymer4<a class="headerlink" href="#pymer4" title="Permalink to this headline">¶</a></h1>
-<p>Love multi-level-modeling using <a class="reference external" href="https://cran.r-project.org/web/packages/lme4/index.html">lme4</a> in R, but prefer to work in the scientific Python ecosystem? This package has got you covered! It’s a small convenience package wrapping the basic functionality of lme4 for compatibility with python. (<em>Currently this only include linear and logistic multi-level models</em>)</p>
+<p>Love multi-level-modeling using <a class="reference external" href="https://cran.r-project.org/web/packages/lme4/index.html">lme4</a> in R, but prefer to work in the scientific Python ecosystem? This package has got you covered! It’s a small convenience package wrapping the basic functionality of lme4 for compatibility with python.</p>
 <p>This package’s main purpose is to provide a clean interface that hides the back-and-forth code required when moving between R and Python. In other words a user can work completely in Python, never having to deal with R, but get (most) of lme4’s goodness. Behind the scenes this package simply uses <a class="reference external" href="https://rpy2.readthedocs.io/en/version_2.8.x/">rpy2</a> to pass objects between languages, compute what’s needed, parse everything, and convert to Python types (e.g. numpy arrays, pandas dataframes, etc).</p>
 <p>This package can also fit standard regression models with a few extra bells and whistles compared to R’s <code class="code docutils literal"><span class="pre">lm()</span></code> (<em>Currently this only includes linear models</em>)</p>
 <p>TL;DR This package is your new <em>simple</em> Pythonic drop-in replacement for <code class="code docutils literal"><span class="pre">lm()</span></code> or <code class="code docutils literal"><span class="pre">glmer()</span></code> in R.</p>
@@ -191,6 +194,7 @@
 <li>Easy post-hoc tests with multiple-comparisons correction via <a class="reference external" href="https://cran.r-project.org/web/packages/lsmeans/index.html">lsmeans</a></li>
 <li>Easy model predictions on new data</li>
 <li>Easy generation of new data from a fitted model</li>
+<li>Optional p-value computation via within cluster permutation testing (experimental)</li>
 </ul>
 </div></blockquote>
 </li>
@@ -199,7 +203,7 @@
 <div><ul class="simple">
 <li>Automatic inclusion of confidence intervals in model output</li>
 <li>Easy computation of empirically bootstrapped 95% confidence intervals</li>
-<li>Easy computation of heteroscedasticity or auto-correlation robust ‘sandwich estimators’ for standard errors (<em>note: these are not the same as auto-regressive models</em>)</li>
+<li>Easy computation of cluster-robust, heteroscedasticity-robust or auto-correlation-robust, ‘sandwich estimators’ for standard errors (<em>note: these are not the same as auto-regressive models</em>)</li>
 <li>Permutation tests on model parameters</li>
 </ul>
 </div></blockquote>
@@ -208,6 +212,13 @@
 <blockquote>
 <div><ul class="simple">
 <li>Highly customizable functions for generating data useful for standard regression models and multi-level models</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first">Data visualization</p>
+<blockquote>
+<div><ul class="simple">
+<li>Convenience methods for plotting model estimates, including random-effects terms</li>
 </ul>
 </div></blockquote>
 </li>
@@ -258,7 +269,7 @@
 </div>
 </div></blockquote>
 </li>
-<li><p class="first">Finally install <code class="docutils literal"><span class="pre">rpy2</span></code> using the new compiler you just installed: <code class="docutils literal"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">rpy2==2.8.6</span></code></p>
+<li><p class="first">Finally install <code class="docutils literal"><span class="pre">rpy2</span></code> using the new compiler you just installed: <code class="docutils literal"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">rpy2==2.8.5</span></code></p>
 </li>
 <li><p class="first">Now you should be able to <code class="docutils literal"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">pymer4</span></code>:)</p>
 </li>
@@ -272,6 +283,7 @@
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Basic Usage Guide</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="usage.html#estimate-a-standard-regression-model">Estimate a standard regression model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="usage.html#estimate-a-multi-level-model">Estimate a multi-level model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#visualize-model-summary">Visualize model summary</a></li>
 <li class="toctree-l2"><a class="reference internal" href="usage.html#inspect-random-effects">Inspect random effects</a></li>
 <li class="toctree-l2"><a class="reference internal" href="usage.html#inspect-other-attributes">Inspect other attributes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="usage.html#inspect-overall-fit">Inspect overall fit</a></li>
@@ -289,7 +301,22 @@
 <li class="toctree-l2"><a class="reference internal" href="categorical.html#multi-level-models">Multi-level Models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="categorical.html#dummy-coding-factors">Dummy coding factors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="categorical.html#polynomial-contrast-coding">Polynomial contrast coding</a></li>
-<li class="toctree-l2"><a class="reference internal" href="categorical.html#custom-parameterizations">Custom parameterizations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="categorical.html#custom-contrasts">Custom contrasts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="categorical.html#simpler-custom-contrasts">(Simpler) Custom contrasts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="categorical.html#how-contrasts-in-r-work">How contrasts in R work</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="post-hoc-comparisons">
+<h2>Post-hoc Comparisons<a class="headerlink" href="#post-hoc-comparisons" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="post_hoc.html">ANOVA tables and post-hoc comparisons</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="post_hoc.html#anova-tables-and-orthogonal-contrasts">ANOVA tables and orthogonal contrasts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="post_hoc.html#marginal-estimates-and-post-hoc-comparisons">Marginal estimates and post-hoc comparisons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="post_hoc.html#examples">Examples</a></li>
 </ul>
 </li>
 </ul>
@@ -370,7 +397,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.4.0',
+            VERSION:'0.5.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
