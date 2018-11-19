@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>API Reference &mdash; pymer4 0.5.0 documentation</title>
+  <title>API Reference &mdash; pymer4 0.6.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="pymer4 0.5.0 documentation" href="index.html"/>
+    <link rel="top" title="pymer4 0.6.0 documentation" href="index.html"/>
         <link rel="prev" title="Lme4 Random Effects Cheat Sheet" href="rfx_cheatsheet.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.5.0
+                0.6.0
               </div>
             
           
@@ -106,9 +106,9 @@
 </ul>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#pymer4-models-model-classes"><code class="docutils literal"><span class="pre">pymer4.models</span></code>: Model Classes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#module-pymer4.simulate"><code class="docutils literal"><span class="pre">pymer4.simulate</span></code>: Simulation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#module-pymer4.utils"><code class="docutils literal"><span class="pre">pymer4.utils</span></code>: Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#pymer4-models-model-classes"><code class="docutils literal notranslate"><span class="pre">pymer4.models</span></code>: Model Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#module-pymer4.simulate"><code class="docutils literal notranslate"><span class="pre">pymer4.simulate</span></code>: Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#module-pymer4.utils"><code class="docutils literal notranslate"><span class="pre">pymer4.utils</span></code>: Utilities</a></li>
 </ul>
 
             
@@ -176,7 +176,7 @@
 <h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline">¶</a></h1>
 </div>
 <div class="section" id="pymer4-models-model-classes">
-<h1><code class="xref py py-mod docutils literal"><span class="pre">pymer4.models</span></code>: Model Classes<a class="headerlink" href="#pymer4-models-model-classes" title="Permalink to this headline">¶</a></h1>
+<h1><code class="xref py py-mod docutils literal notranslate"><span class="pre">pymer4.models</span></code>: Model Classes<a class="headerlink" href="#pymer4-models-model-classes" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="pymer4.models.Lmer">
 <em class="property">class </em><code class="descclassname">pymer4.models.</code><code class="descname">Lmer</code><span class="sig-paren">(</span><em>formula</em>, <em>data</em>, <em>family='gaussian'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymer4/models.html#Lmer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymer4.models.Lmer" title="Permalink to this definition">¶</a></dt>
@@ -260,15 +260,15 @@
 <p class="rubric">Examples</p>
 <p>The following examples demonstrate how to treat variables as categorical factors.</p>
 <p>Dummy-Coding: Treat Col1 as a factor which 3 levels: A, B, C. Use dummy-coding with A as the reference level. Model intercept will be mean of A, and parameters will be B-A, and C-A.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">factors</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Col1&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;B&#39;</span><span class="p">,</span><span class="s1">&#39;C&#39;</span><span class="p">]})</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">factors</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Col1&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;B&#39;</span><span class="p">,</span><span class="s1">&#39;C&#39;</span><span class="p">]})</span>
 </pre></div>
 </div>
 <p>Orthogonal Polynomials: Treat Col1 as a factor which 3 levels: A, B, C. Estimate a linear contrast of C &gt; B &gt; A. Model intercept will be grand-mean of all levels, and parameters will be linear contrast, and orthogonal polynomial contrast (auto-computed).</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">factors</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Col1&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;B&#39;</span><span class="p">,</span><span class="s1">&#39;C&#39;</span><span class="p">]},</span> <span class="n">ordered</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">factors</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Col1&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;B&#39;</span><span class="p">,</span><span class="s1">&#39;C&#39;</span><span class="p">]},</span> <span class="n">ordered</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Custom-contrast: Treat Col1 as a factor which 3 levels: A, B, C. Compare A to the mean of B and C. Model intercept will be the grand-mean of all levels, and parameters will be the desired contrast, a well as an automatically determined orthogonal contrast.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">factors</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Col1&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">:</span> <span class="o">-.</span><span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="o">-.</span><span class="mi">5</span><span class="p">}}))</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">factors</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Col1&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">:</span> <span class="o">-.</span><span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="o">-.</span><span class="mi">5</span><span class="p">}}))</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -355,15 +355,15 @@ marginal_contrasts (pd.DataFrame): contrasts between factor levels</p>
 </table>
 <p class="rubric">Examples</p>
 <p>Pairwise comparison of means of A at each level of B</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">post_hoc</span><span class="p">(</span><span class="n">marginal_vars</span><span class="o">=</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="n">grouping_vars</span><span class="o">=</span><span class="s1">&#39;B&#39;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">post_hoc</span><span class="p">(</span><span class="n">marginal_vars</span><span class="o">=</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="n">grouping_vars</span><span class="o">=</span><span class="s1">&#39;B&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Pairwise differences of slopes of C between levels of A at each level of B</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">post_hoc</span><span class="p">(</span><span class="n">marginal_vars</span><span class="o">=</span><span class="s1">&#39;C&#39;</span><span class="p">,</span><span class="n">grouping_vars</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;B&#39;</span><span class="p">])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">post_hoc</span><span class="p">(</span><span class="n">marginal_vars</span><span class="o">=</span><span class="s1">&#39;C&#39;</span><span class="p">,</span><span class="n">grouping_vars</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;B&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
 <p>Pairwise differences of each unique A,B cell</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">post_hoc</span><span class="p">(</span><span class="n">marginal_vars</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;B&#39;</span><span class="p">])</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="o">.</span><span class="n">post_hoc</span><span class="p">(</span><span class="n">marginal_vars</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;B&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -524,7 +524,7 @@ Robust estimators include:</p>
 
 </div>
 <div class="section" id="module-pymer4.simulate">
-<span id="pymer4-simulate-simulation"></span><h1><a class="reference internal" href="#module-pymer4.simulate" title="pymer4.simulate"><code class="xref py py-mod docutils literal"><span class="pre">pymer4.simulate</span></code></a>: Simulation<a class="headerlink" href="#module-pymer4.simulate" title="Permalink to this headline">¶</a></h1>
+<span id="pymer4-simulate-simulation"></span><h1><a class="reference internal" href="#module-pymer4.simulate" title="pymer4.simulate"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pymer4.simulate</span></code></a>: Simulation<a class="headerlink" href="#module-pymer4.simulate" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="pymer4.simulate.simulate_lm">
 <code class="descclassname">pymer4.simulate.</code><code class="descname">simulate_lm</code><span class="sig-paren">(</span><em>num_obs</em>, <em>num_coef</em>, <em>coef_vals=None</em>, <em>corrs=None</em>, <em>mus=0.0</em>, <em>sigmas=1.0</em>, <em>noise_params=(0</em>, <em>1)</em>, <em>family='gaussian'</em>, <em>seed=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymer4/simulate.html#simulate_lm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymer4.simulate.simulate_lm" title="Permalink to this definition">¶</a></dt>
@@ -626,7 +626,7 @@ population coefficient values</p>
 
 </div>
 <div class="section" id="module-pymer4.utils">
-<span id="pymer4-utils-utilities"></span><h1><a class="reference internal" href="#module-pymer4.utils" title="pymer4.utils"><code class="xref py py-mod docutils literal"><span class="pre">pymer4.utils</span></code></a>: Utilities<a class="headerlink" href="#module-pymer4.utils" title="Permalink to this headline">¶</a></h1>
+<span id="pymer4-utils-utilities"></span><h1><a class="reference internal" href="#module-pymer4.utils" title="pymer4.utils"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pymer4.utils</span></code></a>: Utilities<a class="headerlink" href="#module-pymer4.utils" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="pymer4.utils.get_resource_path">
 <code class="descclassname">pymer4.utils.</code><code class="descname">get_resource_path</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pymer4/utils.html#get_resource_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pymer4.utils.get_resource_path" title="Permalink to this definition">¶</a></dt>
@@ -703,7 +703,7 @@ population coefficient values</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.5.0',
+            VERSION:'0.6.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -713,6 +713,7 @@ population coefficient values</p>
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

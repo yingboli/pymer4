@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Categorical Predictors &mdash; pymer4 0.5.0 documentation</title>
+  <title>Categorical Predictors &mdash; pymer4 0.6.0 documentation</title>
   
 
   
@@ -35,7 +35,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="pymer4 0.5.0 documentation" href="index.html"/>
+    <link rel="top" title="pymer4 0.6.0 documentation" href="index.html"/>
         <link rel="next" title="ANOVA tables and post-hoc comparisons" href="post_hoc.html"/>
         <link rel="prev" title="Basic Usage Guide" href="usage.html"/> 
 
@@ -66,7 +66,7 @@
             
             
               <div class="version">
-                0.5.0
+                0.6.0
               </div>
             
           
@@ -116,9 +116,9 @@
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html#pymer4-models-model-classes"><code class="docutils literal"><span class="pre">pymer4.models</span></code>: Model Classes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html#module-pymer4.simulate"><code class="docutils literal"><span class="pre">pymer4.simulate</span></code>: Simulation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html#module-pymer4.utils"><code class="docutils literal"><span class="pre">pymer4.utils</span></code>: Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html#pymer4-models-model-classes"><code class="docutils literal notranslate"><span class="pre">pymer4.models</span></code>: Model Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html#module-pymer4.simulate"><code class="docutils literal notranslate"><span class="pre">pymer4.simulate</span></code>: Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html#module-pymer4.utils"><code class="docutils literal notranslate"><span class="pre">pymer4.utils</span></code>: Utilities</a></li>
 </ul>
 
             
@@ -184,12 +184,12 @@
             
   <div class="section" id="categorical-predictors">
 <h1>Categorical Predictors<a class="headerlink" href="#categorical-predictors" title="Permalink to this headline">¶</a></h1>
-<p>The syntax for handling categorical predictors is <strong>different</strong> between standard regression models and multi-level models in <code class="code docutils literal"><span class="pre">pymer4</span></code>. This is because formula parsing is passed to R for multi-level models, but handled by Python for standard regression models. Please note the differences below.</p>
+<p>The syntax for handling categorical predictors is <strong>different</strong> between standard regression models and multi-level models in <code class="code docutils literal notranslate"><span class="pre">pymer4</span></code>. This is because formula parsing is passed to R for multi-level models, but handled by Python for standard regression models. Please note the differences below.</p>
 <div class="section" id="standard-regression-models">
 <h2>Standard Regression Models<a class="headerlink" href="#standard-regression-models" title="Permalink to this headline">¶</a></h2>
-<p><code class="code docutils literal"><span class="pre">Lm()</span></code> models uses <a class="reference external" href="https://patsy.readthedocs.io/en/latest/">patsy</a> to parse model formulae for <em>standard regression analyses</em>. Patsy is very powerful and has built-in support for handling categorical coding schemes (e.g. wrapping predictors in the <code class="code docutils literal"><span class="pre">C()</span></code> syntax). Patsy can also perform some pre-processing such as scaling and standardization.</p>
+<p><code class="code docutils literal notranslate"><span class="pre">Lm()</span></code> models uses <a class="reference external" href="https://patsy.readthedocs.io/en/latest/">patsy</a> to parse model formulae for <em>standard regression analyses</em>. Patsy is very powerful and has built-in support for handling categorical coding schemes (e.g. wrapping predictors in the <code class="code docutils literal notranslate"><span class="pre">C()</span></code> syntax). Patsy can also perform some pre-processing such as scaling and standardization.</p>
 <p>A few common parameterizations include:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Assuming a categorical predictor IV1 has 3 levels named, &#39;a&#39;, &#39;b&#39;, &#39;c&#39;</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Assuming a categorical predictor IV1 has 3 levels named, &#39;a&#39;, &#39;b&#39;, &#39;c&#39;</span>
 
 <span class="c1"># Treatment contrasts (dummy-coding) with &#39;a&#39; as the reference level</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">Lm</span><span class="p">(</span><span class="s1">&#39;DV ~ C(IV, levels=[&#39;</span><span class="n">a</span><span class="s1">&#39;,&#39;</span><span class="sa">b</span><span class="s1">&#39;,&#39;</span><span class="n">c</span><span class="s1">&#39;])&#39;</span><span class="p">,</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
@@ -208,19 +208,19 @@
 </div>
 <div class="section" id="multi-level-models">
 <h2>Multi-level Models<a class="headerlink" href="#multi-level-models" title="Permalink to this headline">¶</a></h2>
-<p><code class="code docutils literal"><span class="pre">Lmer()</span></code> models currently have support for handling categorical predictors in one of three ways based on how R’s <code class="code docutils literal"><span class="pre">factor()</span></code> works:</p>
+<p><code class="code docutils literal notranslate"><span class="pre">Lmer()</span></code> models currently have support for handling categorical predictors in one of three ways based on how R’s <code class="code docutils literal notranslate"><span class="pre">factor()</span></code> works:</p>
 <ol class="arabic simple">
 <li>Dummy-coded factor levels (treatment contrasts) in which each model term is the difference between a factor level and a selected reference level</li>
 <li>Orthogonal polynomial contrasts in which each model term is a polynomial contrast across factor levels (e.g. linear, quadratic, cubic, etc)</li>
 <li>Custom contrasts for each level of a factor, which should be provide in the manner expected by R.</li>
 </ol>
-<p>To make re-parameterizing models easier, factor codings are passed as an argument to a model’s <code class="code docutils literal"><span class="pre">fit</span></code> method. This obviates the need for adjusting data-frame properties as in R.</p>
+<p>To make re-parameterizing models easier, factor codings are passed as an argument to a model’s <code class="code docutils literal notranslate"><span class="pre">fit</span></code> method. This obviates the need for adjusting data-frame properties as in R.</p>
 </div>
 <div class="section" id="dummy-coding-factors">
 <h2>Dummy coding factors<a class="headerlink" href="#dummy-coding-factors" title="Permalink to this headline">¶</a></h2>
-<p>To dummy code factors (i.e. use treatment contrasts) simply pass a model’s <code class="code docutils literal"><span class="pre">fit</span></code> method a dictionary with keys containing model terms to be treated as factors, and values as a list of unique factor levels.</p>
+<p>To dummy code factors (i.e. use treatment contrasts) simply pass a model’s <code class="code docutils literal notranslate"><span class="pre">fit</span></code> method a dictionary with keys containing model terms to be treated as factors, and values as a list of unique factor levels.</p>
 <p>The <em>first</em> term in the list will be treated as the reference level.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Initialize a multi-level-model</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initialize a multi-level-model</span>
 <span class="c1"># We&#39;re going to treat IV3 as categorical predictor during fitting</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">Lmer</span><span class="p">(</span><span class="s1">&#39;DV_l ~ IV3 + (IV3|Group)&#39;</span><span class="p">,</span><span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span><span class="n">family</span><span class="o">=</span><span class="s1">&#39;binomial&#39;</span><span class="p">)</span>
 
@@ -233,9 +233,9 @@
 </div>
 <div class="section" id="polynomial-contrast-coding">
 <h2>Polynomial contrast coding<a class="headerlink" href="#polynomial-contrast-coding" title="Permalink to this headline">¶</a></h2>
-<p>Representing factors as polynomial contrasts is very similar. Like before, simply pass a model’s <code class="code docutils literal"><span class="pre">fit</span></code> method a dictionary with keys containing model terms to be treated as factors, and values as a list of unique factor levels, as well as the <code class="code docutils literal"><span class="pre">ordered</span> <span class="pre">=</span> <span class="pre">True</span></code> flag.</p>
+<p>Representing factors as polynomial contrasts is very similar. Like before, simply pass a model’s <code class="code docutils literal notranslate"><span class="pre">fit</span></code> method a dictionary with keys containing model terms to be treated as factors, and values as a list of unique factor levels, as well as the <code class="code docutils literal notranslate"><span class="pre">ordered</span> <span class="pre">=</span> <span class="pre">True</span></code> flag.</p>
 <p>This will treat the order of list items as the order of factor levels for the <em>linear</em> polynomial term. Each higher order polynomial (if required) will be automatically calculated orthogonally with respect to the linear contrast.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Initialize a model using a categorical predictor</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initialize a model using a categorical predictor</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">Lmer</span><span class="p">(</span><span class="s1">&#39;DV_l ~ IV3 + (IV3|Group)&#39;</span><span class="p">,</span><span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span><span class="n">family</span><span class="o">=</span><span class="s1">&#39;binomial&#39;</span><span class="p">)</span>
 
 <span class="c1"># Using polynomial coding for IV3, since there are 3 factor levels this will result in two polynomial terms: a linear and quadratic contrast</span>
@@ -250,26 +250,26 @@
 </div>
 <div class="section" id="custom-contrasts">
 <h2>Custom contrasts<a class="headerlink" href="#custom-contrasts" title="Permalink to this headline">¶</a></h2>
-<p><code class="code docutils literal"><span class="pre">Lmer()</span></code> models can also take custom factor contrasts based on how they are expected by R. Remember that there can be at most k-1 model terms representing any k level factor without over-parameterizing a model. If all that’s desired is a specific contrast between factor levels (e.g. rather than all possible k-1 contrasts) you have 2 options:</p>
+<p><code class="code docutils literal notranslate"><span class="pre">Lmer()</span></code> models can also take custom factor contrasts based on how they are expected by R. Remember that there can be at most k-1 model terms representing any k level factor without over-parameterizing a model. If all that’s desired is a specific contrast between factor levels (e.g. rather than all possible k-1 contrasts) you have 2 options:</p>
 <ol class="arabic simple">
-<li>Specify a custom contrast using the syntax below (also available in the <code class="code docutils literal"><span class="pre">model.fit()</span></code> method help). This will guarantee that one of your model terms reflects your desired contrast, and R will generate set of orthogonal contrasts for the rest of your model terms.</li>
+<li>Specify a custom contrast using the syntax below (also available in the <code class="code docutils literal notranslate"><span class="pre">model.fit()</span></code> method help). This will guarantee that one of your model terms reflects your desired contrast, and R will generate set of orthogonal contrasts for the rest of your model terms.</li>
 </ol>
 <p><strong>Example</strong>
 Compare level ‘1.0’ in ‘IV3’ to the mean of levels ‘0.5’ and ‘1.5’</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">factors</span><span class="o">=</span><span class="p">{</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">factors</span><span class="o">=</span><span class="p">{</span>
     <span class="s1">&#39;IV3&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;1.0&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;0.5&#39;</span><span class="p">:</span> <span class="o">-.</span><span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;1.5&#39;</span><span class="p">:</span> <span class="o">-.</span><span class="mi">5</span><span class="p">}</span>
 <span class="p">})</span>
 </pre></div>
 </div>
 <ol class="arabic simple" start="2">
-<li>Fit a model with <em>only</em> the desired contrast rather than a full set of k-1 contrasts. Contrary to how statistics is usually taught, you don’t ever <em>have to</em> include a full set of k-1 contrasts for a k level factor! Follow the directions below to do this (section: “simpler” custom contrasts). The upside is you won’t need to rely on R to compute anything for you (aside from the model fit), and you will have a model with exactly the number of terms as contrasts you desire giving you complete control. The downside is that <code class="code docutils literal"><span class="pre">model.post_hoc()</span></code> methods will not be able to do pairwise comparisons as they rely on R’s internal representation of factor levels.</li>
+<li>Fit a model with <em>only</em> the desired contrast rather than a full set of k-1 contrasts. Contrary to how statistics is usually taught, you don’t ever <em>have to</em> include a full set of k-1 contrasts for a k level factor! Follow the directions below to do this (section: “simpler” custom contrasts). The upside is you won’t need to rely on R to compute anything for you (aside from the model fit), and you will have a model with exactly the number of terms as contrasts you desire giving you complete control. The downside is that <code class="code docutils literal notranslate"><span class="pre">model.post_hoc()</span></code> methods will not be able to do pairwise comparisons as they rely on R’s internal representation of factor levels.</li>
 </ol>
 </div>
 <div class="section" id="simpler-custom-contrasts">
 <h2>(Simpler) Custom contrasts<a class="headerlink" href="#simpler-custom-contrasts" title="Permalink to this headline">¶</a></h2>
-<p>Testing specific parameterizations without relying on R’s factor coding is often easier done by creating new columns in a dataframe with specific coding schemes. These new columns can be utilized within models to test specific hypotheses. However, the downside of this approach is that the <code class="code docutils literal"><span class="pre">model.post_hoc()</span></code> method will no longer be able estimate simple-effects because it will not be able to group factor levels automatically.  <em>Note: this is also a useful approach if you don’t want to use patsy’s formula langauge with standard regression models as noted above</em>.</p>
+<p>Testing specific parameterizations without relying on R’s factor coding is often easier done by creating new columns in a dataframe with specific coding schemes. These new columns can be utilized within models to test specific hypotheses. However, the downside of this approach is that the <code class="code docutils literal notranslate"><span class="pre">model.post_hoc()</span></code> method will no longer be able estimate simple-effects because it will not be able to group factor levels automatically.  <em>Note: this is also a useful approach if you don’t want to use patsy’s formula langauge with standard regression models as noted above</em>.</p>
 <p>This is trivial using pandas map and assign methods. Here we’ll only build a linear contrast across factor levels (0.5 &lt; 1.0 &lt; 1.5), without all exhaustive higher level polynomial terms:</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span>
 <span class="n">IV_3_custom_lin</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;IV3&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">({</span>
                                 <span class="mf">0.5</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
                                 <span class="mf">1.0</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
@@ -279,8 +279,8 @@ Compare level ‘1.0’ in ‘IV3’ to the mean of levels ‘0.5’ and ‘1.5�
 </pre></div>
 </div>
 <img alt="_images/sample_data_custom_head.png" src="_images/sample_data_custom_head.png" />
-<p>Now we can estimate this model without the need to use the <code class="code docutils literal"><span class="pre">factor</span></code> argument to the model’s <code class="code docutils literal"><span class="pre">fit</span></code> method.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">Lmer</span><span class="p">(</span><span class="s1">&#39;DV ~ IV3_custom_lin + (IV3_custom_lin|Group)&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">)</span>
+<p>Now we can estimate this model without the need to use the <code class="code docutils literal notranslate"><span class="pre">factor</span></code> argument to the model’s <code class="code docutils literal notranslate"><span class="pre">fit</span></code> method.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">Lmer</span><span class="p">(</span><span class="s1">&#39;DV ~ IV3_custom_lin + (IV3_custom_lin|Group)&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">)</span>
 <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -288,7 +288,7 @@ Compare level ‘1.0’ in ‘IV3’ to the mean of levels ‘0.5’ and ‘1.5�
 <div class="section" id="how-contrasts-in-r-work">
 <h2>How contrasts in R work<a class="headerlink" href="#how-contrasts-in-r-work" title="Permalink to this headline">¶</a></h2>
 <p><em>This is just for folks curious about how contrasts in R work</em>.
-Specifying multiple custom contrasts in R has always been a point of confusion amongst users. This because the <code class="code docutils literal"><span class="pre">contrasts()</span></code> command in R doesn’t actually expect contrast weights (i.e. a design matrix) as one would intuit. Rather, it is made for generating contrast coding schemes which are the inverse of the contrast weight matrix. For a longer explanation with examples see <a class="reference external" href="https://rstudio-pubs-static.s3.amazonaws.com/65059_586f394d8eb84f84b1baaf56ffb6b47f.html">this reference</a> and <a class="reference external" href="https://github.com/ejolly/R/blob/master/Guides/Contrasts_in_R.md">this reference</a>. For these situations pymer4 offers a few utility functions to convert between these matrix types if desired in <code class="code docutils literal"><span class="pre">pymer4.utils</span></code>: <code class="code docutils literal"><span class="pre">R2con</span></code> and <code class="code docutils literal"><span class="pre">con2R</span></code>.</p>
+Specifying multiple custom contrasts in R has always been a point of confusion amongst users. This because the <code class="code docutils literal notranslate"><span class="pre">contrasts()</span></code> command in R doesn’t actually expect contrast weights (i.e. a design matrix) as one would intuit. Rather, it is made for generating contrast coding schemes which are the inverse of the contrast weight matrix. For a longer explanation with examples see <a class="reference external" href="https://rstudio-pubs-static.s3.amazonaws.com/65059_586f394d8eb84f84b1baaf56ffb6b47f.html">this reference</a> and <a class="reference external" href="https://github.com/ejolly/R/blob/master/Guides/Contrasts_in_R.md">this reference</a>. For these situations pymer4 offers a few utility functions to convert between these matrix types if desired in <code class="code docutils literal notranslate"><span class="pre">pymer4.utils</span></code>: <code class="code docutils literal notranslate"><span class="pre">R2con</span></code> and <code class="code docutils literal notranslate"><span class="pre">con2R</span></code>.</p>
 </div>
 </div>
 
@@ -336,7 +336,7 @@ Specifying multiple custom contrasts in R has always been a point of confusion a
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'0.5.0',
+            VERSION:'0.6.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true,
@@ -346,6 +346,7 @@ Specifying multiple custom contrasts in R has always been a point of confusion a
       <script type="text/javascript" src="_static/jquery.js"></script>
       <script type="text/javascript" src="_static/underscore.js"></script>
       <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 
