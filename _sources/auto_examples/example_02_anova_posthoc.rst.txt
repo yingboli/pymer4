@@ -1,0 +1,275 @@
+.. note::
+    :class: sphx-glr-download-link-note
+
+    Click :ref:`here <sphx_glr_download_auto_examples_example_02_anova_posthoc.py>` to download the full example code
+.. rst-class:: sphx-glr-example-title
+
+.. _sphx_glr_auto_examples_example_02_anova_posthoc.py:
+
+
+Categorical Predictors
+======================
+
+The syntax for handling categorical predictors is **different** between standard regression models/two-stage-models (i.e. :code:`Lm` and :code:`Lm2`) and multi-level models (:code:`Lmer`) in :code:`pymer4`. This is because formula parsing is passed to R for :code:`Lmer` models, but handled by Python for other models. 
+
+Lm and Lm2 Models
+-----------------
+:code:`Lm` and :code:`Lm2` models uses `patsy  <https://patsy.readthedocs.io/en/latest/>`_ to parse model formulae. Patsy is very powerful and has built-in support for handling categorical coding schemes (e.g. wrapping predictors in the :code:`C()` syntax). Patsy can also perform some pre-processing such as scaling and standardization. Here are some examples
+
+
+.. code-block:: default
+
+
+    # import basic libraries and sample data
+    import os
+    import pandas as pd
+    from pymer4.utils import get_resource_path
+    from pymer4.models import Lm
+    df = pd.read_csv(os.path.join(get_resource_path(), 'sample_data.csv'))
+
+    # IV3 is a categorical predictors with 3 levels 
+    # Estimate a model using Treatment contrasts (dummy-coding)
+    # with '1.0' as the reference level
+    model = Lm("DV ~ C(IV3, levels=[1.0, 0.5, 1.5])", data=df)
+    print(model.fit())
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    Formula: DV~C(IV3,levels=[1.0,0.5,1.5])
+
+    Family: gaussian         Estimator: OLS
+
+    Std-errors: non-robust  CIs: standard 95%       Inference: parametric 
+
+    Number of observations: 564      R^2: 0.004      R^2_adj: 0.001
+
+    Log-likelihood: -2728.620        AIC: 5463.241   BIC: 5476.246
+
+    Fixed effects:
+
+                                           Estimate  2.5_ci  97.5_ci     SE   DF  T-stat  P-val  Sig
+    Intercept                                42.721  38.334   47.108  2.233  561  19.129  0.000  ***
+    C(IV3, levels=[1.0, 0.5, 1.5])[T.0.5]     1.463  -4.741    7.667  3.158  561   0.463  0.643     
+    C(IV3, levels=[1.0, 0.5, 1.5])[T.1.5]    -3.419  -9.622    2.785  3.158  561  -1.082  0.280     
+
+
+
+
+.. code-block:: default
+
+
+    # Now estimate using polynomial contrasts
+    model = Lm('DV ~ C(IV3, Poly)', data=df)
+    print(model.fit())
+
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    Formula: DV~C(IV3,Poly)
+
+    Family: gaussian         Estimator: OLS
+
+    Std-errors: non-robust  CIs: standard 95%       Inference: parametric 
+
+    Number of observations: 564      R^2: 0.004      R^2_adj: 0.001
+
+    Log-likelihood: -2728.620        AIC: 5463.241   BIC: 5476.246
+
+    Fixed effects:
+
+                            Estimate  2.5_ci  97.5_ci     SE   DF  T-stat  P-val  Sig
+    Intercept                 42.069  39.537   44.602  1.289  561  32.627  0.000  ***
+    C(IV3, Poly).Linear       -3.452  -7.838    0.935  2.233  561  -1.546  0.123     
+    C(IV3, Poly).Quadratic    -0.798  -5.185    3.588  2.233  561  -0.357  0.721     
+
+
+
+
+.. code-block:: default
+
+
+    # Sum-to-zero contrasts
+    model = Lm('DV ~ C(IV3, Sum)', data=df)
+    print(model.fit())
+
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    Formula: DV~C(IV3,Sum)
+
+    Family: gaussian         Estimator: OLS
+
+    Std-errors: non-robust  CIs: standard 95%       Inference: parametric 
+
+    Number of observations: 564      R^2: 0.004      R^2_adj: 0.001
+
+    Log-likelihood: -2728.620        AIC: 5463.241   BIC: 5476.246
+
+    Fixed effects:
+
+                        Estimate  2.5_ci  97.5_ci     SE   DF  T-stat  P-val  Sig
+    Intercept             42.069  39.537   44.602  1.289  561  32.627  0.000  ***
+    C(IV3, Sum)[S.0.5]     2.115  -1.467    5.697  1.823  561   1.160  0.247     
+    C(IV3, Sum)[S.1.0]     0.652  -2.930    4.234  1.823  561   0.357  0.721     
+
+
+
+
+.. code-block:: default
+
+
+    # Moderation with IV2, but centering IV2 first
+    model = Lm('DV ~ center(IV2) * C(IV3, Sum)', data=df)
+    print(model.fit())
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    Formula: DV~center(IV2)*C(IV3,Sum)
+
+    Family: gaussian         Estimator: OLS
+
+    Std-errors: non-robust  CIs: standard 95%       Inference: parametric 
+
+    Number of observations: 564      R^2: 0.511      R^2_adj: 0.507
+
+    Log-likelihood: -2528.051        AIC: 5068.102   BIC: 5094.113
+
+    Fixed effects:
+
+                                    Estimate  2.5_ci  97.5_ci     SE   DF  T-stat  P-val  Sig
+    Intercept                         42.051  40.268   43.833  0.908  558  46.329  0.000  ***
+    C(IV3, Sum)[S.0.5]                 0.580  -1.942    3.102  1.284  558   0.452  0.652     
+    C(IV3, Sum)[S.1.0]                 0.383  -2.136    2.903  1.282  558   0.299  0.765     
+    center(IV2)                        0.746   0.685    0.807  0.031  558  24.012  0.000  ***
+    center(IV2):C(IV3, Sum)[S.0.5]     0.050  -0.037    0.137  0.044  558   1.132  0.258     
+    center(IV2):C(IV3, Sum)[S.1.0]    -0.057  -0.144    0.029  0.044  558  -1.306  0.192     
+
+
+
+Please refer to the `patsy documentation <https://patsy.readthedocs.io/en/latest/categorical-coding.html>`_ for more details when working categorical predictors in :code:`Lm` or :code:`Lm2` models.
+
+Lmer Models
+-----------
+:code:`Lmer()` models currently have support for handling categorical predictors in one of three ways based on how R's :code:`factor()` works:
+
+- Dummy-coded factor levels (treatment contrasts) in which each model term is the difference between a factor level and a selected reference level
+- Orthogonal polynomial contrasts in which each model term is a polynomial contrast across factor levels (e.g. linear, quadratic, cubic, etc)
+- Custom contrasts for each level of a factor, which should be provide in the manner expected by R.
+
+To make re-parameterizing models easier, factor codings are passed as an argument to a model's :code:`.fit()` method unlike :code:`Lm` and :code:`Lm2` models. This obviates the need for adjusting data-frame properties as in R.
+
+
+.. code-block:: default
+
+
+    from pymer4.models import Lmer
+    # We're going to fit a multi-level logistic regression using the 
+    # dichotomous DV_l variable and the same categorical predictor (IV3)
+    # as before
+    model = Lmer('DV_l ~ IV3 + (IV3|Group)', data=df, family='binomial')
+
+    # Dummy-coding with '1.0' as the reference level
+    print(model.fit(factors={
+        'IV3': ['1.0', '0.5', '1.5']
+    }))
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    boundary (singular) fit: see ?isSingular 
+
+    Formula: DV_l~IV3+(IV3|Group)
+
+    Family: binomial         Inference: parametric
+
+    Number of observations: 564      Groups: {'Group': 47.0}
+
+    Log-likelihood: -389.003         AIC: 796.006
+
+    Random effects:
+
+                  Name    Var    Std
+    Group  (Intercept)  0.022  0.148
+    Group       IV30.5  0.060  0.246
+    Group       IV31.5  0.038  0.196
+
+                   IV1     IV2  Corr
+    Group  (Intercept)  IV30.5  -1.0
+    Group  (Intercept)  IV31.5  -1.0
+    Group       IV30.5  IV31.5   1.0
+
+    Fixed effects:
+
+                 Estimate  2.5_ci  97.5_ci     SE     OR  OR_2.5_ci  OR_97.5_ci   Prob  Prob_2.5_ci  Prob_97.5_ci  Z-stat  P-val Sig
+    (Intercept)    -0.129  -0.419    0.162  0.148  0.879      0.658       1.176  0.468        0.397         0.540  -0.867  0.386    
+    IV30.5          0.129  -0.283    0.540  0.210  1.137      0.753       1.716  0.532        0.430         0.632   0.612  0.541    
+    IV31.5         -0.128  -0.539    0.283  0.210  0.880      0.583       1.327  0.468        0.368         0.570  -0.612  0.541    
+
+
+
+
+.. _sphx_glr_download_auto_examples_example_02_anova_posthoc.py:
+
+
+.. only :: html
+
+ .. container:: sphx-glr-footer
+    :class: sphx-glr-footer-example
+
+
+
+  .. container:: sphx-glr-download
+
+     :download:`Download Python source code: example_02_anova_posthoc.py <example_02_anova_posthoc.py>`
+
+
+
+  .. container:: sphx-glr-download
+
+     :download:`Download Jupyter notebook: example_02_anova_posthoc.ipynb <example_02_anova_posthoc.ipynb>`
+
+
+.. only:: html
+
+ .. rst-class:: sphx-glr-signature
+
+    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.github.io>`_

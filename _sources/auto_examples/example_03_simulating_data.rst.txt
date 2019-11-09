@@ -1,0 +1,366 @@
+.. note::
+    :class: sphx-glr-download-link-note
+
+    Click :ref:`here <sphx_glr_download_auto_examples_example_03_simulating_data.py>` to download the full example code
+.. rst-class:: sphx-glr-example-title
+
+.. _sphx_glr_auto_examples_example_03_simulating_data.py:
+
+
+Simulating Data
+===============
+:code:`pymer4` comes with some easy-to-use functions for simulating data that can be modeled with :code:`Lm()` and multi-level data that can be modeled with :code:`Lmer()`. These functions can be found in the :code:`pymer4.simulate` module and are aptly named: :code:`simulate_lm()` and :code:`simulate_lmm()` respectively.
+
+:code:`pymer4` gives you a lot of control over what you want your data to look like by setting properties such as:
+
+- Number of data points and number of coefficients
+- Specific coefficient values
+- Means and standard deviations of predictors
+- Correlations between predictors
+- Amount of error (noise) in the data
+- Number of groups/clusters (multi-level data only)
+- Variance of random effects (multi-level data only)
+
+Generating standard regression data
+-----------------------------------
+Generating data for a standard regression is simple and returns a pandas dataframe with outcome and predictor variables ready for use with :code:`Lm()`, along with a vector of coefficients used to produce the data.
+
+Let's generate 500 observations, with predictors with the values: 1.2, -40.1, and 3. We also have an intercept with a value of 100. The means of the columns of our design matrix (i.e. means of the predictors) will be: 10, 30, and 1. We'll also add noise from a normal distribution with mean = 0, and sd = 5. Any correlations between predictors are purely random.
+
+
+.. code-block:: default
+
+
+    from pymer4.simulate import simulate_lm
+
+    data, b = simulate_lm(
+        500, 3, coef_vals=[100, 1.2, -40.1, 3], mus=[10, 30, 1], noise_params=(0, 5)
+    )
+    print(f"True coefficients:\n{b}\n")
+    print(f"Data:\n{data.head()}")
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    True coefficients:
+    [100, 1.2, -40.1, 3]
+
+    Data:
+                DV        IV1        IV2       IV3
+    0 -1090.300418  11.502450  30.286516  2.309898
+    1 -1099.941064   8.187192  30.278491  1.718110
+    2 -1046.515779  11.039804  28.953171  0.403214
+    3 -1050.762121   9.720598  29.288062  0.871281
+    4 -1049.463841  11.008839  29.148838  1.555108
+
+
+
+Here are some checks you might do to make sure the data correctly generated:
+
+Check mean of predictors
+
+
+.. code-block:: default
+
+    print(data.iloc[:, 1:].mean(axis=0))
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    IV1     9.992834
+    IV2    29.983225
+    IV3     1.041560
+    dtype: float64
+
+
+
+Check correlations between predictors
+
+
+.. code-block:: default
+
+    print(data.iloc[:, 1:].corr())
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+              IV1       IV2       IV3
+    IV1  1.000000  0.027562  0.054908
+    IV2  0.027562  1.000000 -0.011895
+    IV3  0.054908 -0.011895  1.000000
+
+
+
+Check coefficient recovery
+
+
+.. code-block:: default
+
+    from pymer4.models import Lm
+
+    model = Lm("DV ~ IV1+IV2+IV3", data=data)
+    model.fit(summarize=False)
+    print(model.coefs.loc[:, "Estimate"])
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    Intercept    102.418462
+    IV1            1.392601
+    IV2          -40.232719
+    IV3            2.759236
+    Name: Estimate, dtype: float64
+
+
+
+However, you have the option of being as general or specific as possible when generating data. For example let's generate 100 observations with 5 predictors from a standard normal distribution, i.e. mean = 0, sd = 1 with no (random) correlations between predictors, and let :code:`pymer4` decide what to set the coefficient values to.
+
+
+.. code-block:: default
+
+
+    data, b = simulate_lm(100, 5)
+
+
+
+
+
+
+
+Generating multi-level regression data
+--------------------------------------
+Generating data for a multi-level regression is just as simple and returns a pandas dataframe with outcome and predictor variables ready for use with :code:`Lmer()`, another dataframe with group/cluster level estimates (i.e. BLUPs), and a vector of population-level coefficients.
+
+Here's an example generating 5000 observations, organized as 100 groups with 50 observations each. We'll have three predictors with the values: 1.8, -2, and 10. We also have an intercept with a value of 4. The means of the columns of our design matrix (i.e. means of the predictors) will be: 10, 30, and 2. We'll also introduce correlations between our predictors of r = .15. We'll leave the default of standard normal noise i.e., mean = 0, and sd = 1.
+
+
+.. code-block:: default
+
+
+    from pymer4.simulate import simulate_lmm
+
+    num_obs = 50
+    num_coef = 3
+    num_grps = 100
+    mus = [10.0, 30.0, 2.0]
+    coef_vals = [4.0, 1.8, -2, 10]
+    corrs = 0.15
+
+    data, blups, b = simulate_lmm(
+        num_obs, num_coef, num_grps, coef_vals=coef_vals, mus=mus, corrs=corrs
+    )
+
+    print(f"True coefficients:\n{b}\n")
+    print(f"BLUPs:\n{blups.head()}\n")
+    print(f"Data:\n{data.head()}\n")
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    True coefficients:
+    [4.0, 1.8, -2, 10]
+
+    BLUPs:
+          Intercept       IV1       IV2        IV3
+    Grp1   3.541282  2.221274 -1.883782   9.919219
+    Grp2   4.351719  1.965862 -2.300109   9.788001
+    Grp3   4.045521  2.160759 -2.206551  10.141856
+    Grp4   3.941121  1.674062 -2.402550   9.948170
+    Grp5   3.955737  1.364982 -2.280517   9.914629
+
+    Data:
+              DV        IV1        IV2       IV3  Group
+    0 -19.751143   9.333098  31.077555  1.496844    1.0
+    1  -1.425602   9.121674  29.036280  3.061896    1.0
+    2 -22.612739   9.617132  30.617730  0.967337    1.0
+    3 -10.035614  10.671709  32.391089  2.372981    1.0
+    4   8.909193  11.533388  30.400587  3.874369    1.0
+
+
+
+
+Again here are some checks you might do to make sure the data correctly generated (by default lmm data will generally be a bit noisier due to within and across group/cluster variance; see the API for how to customize this):
+
+
+.. code-block:: default
+
+
+    # Group the data before running checks
+    group_data = data.groupby("Group")
+
+
+
+
+
+
+
+Check mean of predictors
+
+
+.. code-block:: default
+
+    print(group_data.apply(lambda grp: grp.iloc[:, 1:-1].mean(axis=0)))
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+                 IV1        IV2       IV3
+    Group                                
+    1.0     9.741979  29.964409  1.953194
+    2.0     9.723950  30.099959  2.024193
+    3.0     9.850033  29.988568  2.124336
+    4.0    10.185484  29.915806  2.325619
+    5.0     9.803502  29.997538  2.030510
+    ...          ...        ...       ...
+    96.0    9.811131  30.063745  1.850667
+    97.0    9.866158  30.098088  1.969615
+    98.0   10.183765  30.058090  1.839024
+    99.0    9.886020  30.022325  2.190552
+    100.0  10.106948  30.016156  2.042250
+
+    [100 rows x 3 columns]
+
+
+
+Check correlations between predictors
+
+
+.. code-block:: default
+
+    print(group_data.apply(lambda grp: grp.iloc[:, 1:-1].corr()))
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+                    IV1       IV2       IV3
+    Group                                  
+    1.0   IV1  1.000000  0.160822  0.172671
+          IV2  0.160822  1.000000  0.190060
+          IV3  0.172671  0.190060  1.000000
+    2.0   IV1  1.000000  0.075578  0.178050
+          IV2  0.075578  1.000000  0.197167
+    ...             ...       ...       ...
+    99.0  IV2  0.280550  1.000000  0.173634
+          IV3  0.021437  0.173634  1.000000
+    100.0 IV1  1.000000  0.198930  0.132432
+          IV2  0.198930  1.000000  0.350461
+          IV3  0.132432  0.350461  1.000000
+
+    [300 rows x 3 columns]
+
+
+
+Check coefficient recovery
+
+
+.. code-block:: default
+
+    from pymer4.models import Lmer
+
+    model = Lmer('DV ~ IV1+IV2+IV3 + (IV1+IV2+IV3|Group)', data=data)
+    model.fit(summarize=False)
+    print(model.coefs.loc[:, "Estimate"])
+
+
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    Model failed to converge with max|grad| = 0.408757 (tol = 0.002, component 1) 
+
+    (Intercept)     3.340792
+    IV1             1.786467
+    IV2            -2.012067
+    IV3            10.039467
+    Name: Estimate, dtype: float64
+
+
+
+
+.. rst-class:: sphx-glr-timing
+
+   **Total running time of the script:** ( 0 minutes  7.825 seconds)
+
+
+.. _sphx_glr_download_auto_examples_example_03_simulating_data.py:
+
+
+.. only :: html
+
+ .. container:: sphx-glr-footer
+    :class: sphx-glr-footer-example
+
+
+
+  .. container:: sphx-glr-download
+
+     :download:`Download Python source code: example_03_simulating_data.py <example_03_simulating_data.py>`
+
+
+
+  .. container:: sphx-glr-download
+
+     :download:`Download Jupyter notebook: example_03_simulating_data.ipynb <example_03_simulating_data.ipynb>`
+
+
+.. only:: html
+
+ .. rst-class:: sphx-glr-signature
+
+    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.github.io>`_

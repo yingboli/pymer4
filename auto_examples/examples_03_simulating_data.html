@@ -1,0 +1,279 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Simulating Data &mdash; pymer4  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> pymer4
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Basic Usage Guide</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../categorical.html">Categorical Predictors</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../post_hoc.html">ANOVA tables and post-hoc comparisons</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../simulate.html">Simulating Data</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../rfx_cheatsheet.html">Lme4 Random Effects Cheat Sheet</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Usage Guide</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html#pymer4-models-model-classes"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pymer4.models</span></code>: Model Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html#module-pymer4.simulate"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pymer4.simulate</span></code>: Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html#module-pymer4.utils"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pymer4.utils</span></code>: Utilities</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pymer4</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Simulating Data</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/auto_examples/examples_03_simulating_data.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-examples-03-simulating-data-py"><span class="std std-ref">here</span></a> to download the full example code</p>
+</div>
+<div class="sphx-glr-example-title section" id="simulating-data">
+<span id="sphx-glr-auto-examples-examples-03-simulating-data-py"></span><h1>Simulating Data<a class="headerlink" href="#simulating-data" title="Permalink to this headline">¶</a></h1>
+<p><code class="code docutils literal notranslate"><span class="pre">pymer4</span></code> comes with some easy-to-use functions for simulating data that can be modeled with <code class="code docutils literal notranslate"><span class="pre">Lm()</span></code> and multi-level data that can be modeled with <code class="code docutils literal notranslate"><span class="pre">Lmer()</span></code>. These functions can be found in the <code class="code docutils literal notranslate"><span class="pre">pymer4.simulate</span></code> module and are aptly named: <code class="code docutils literal notranslate"><span class="pre">simulate_lm()</span></code> and <code class="code docutils literal notranslate"><span class="pre">simulate_lmm()</span></code> respectively.</p>
+<p><code class="code docutils literal notranslate"><span class="pre">pymer4</span></code> gives you a lot of control over what you want your data to look like by setting properties such as:</p>
+<ul class="simple">
+<li><p>Number of data points and number of coefficients</p></li>
+<li><p>Specific coefficient values</p></li>
+<li><p>Means and standard deviations of predictors</p></li>
+<li><p>Correlations between predictors</p></li>
+<li><p>Amount of error (noise) in the data</p></li>
+<li><p>Number of groups/clusters (multi-level data only)</p></li>
+<li><p>Variance of random effects (multi-level data only)</p></li>
+</ul>
+<div class="section" id="generating-standard-regression-data">
+<h2>Generating standard regression data<a class="headerlink" href="#generating-standard-regression-data" title="Permalink to this headline">¶</a></h2>
+<p>Generating data for a standard regression is simple and returns a pandas dataframe with outcome and predictor variables ready for use with <code class="code docutils literal notranslate"><span class="pre">Lm()</span></code>, along with a vector of coefficients used to produce the data.
+Let’s generate 500 observations, with predictors with the values: 1.2, -40.1, and 3. We also have an intercept with a value of 100. The means of the columns of our design matrix (i.e. means of the predictors) will be: 10, 30, and 1. We’ll also add noise from a normal distribution with mean = 0, and sd = 5. Any correlations between predictors are purely random.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pymer4.simulate</span> <span class="k">import</span> <span class="n">simulate_lm</span>
+
+<span class="n">data</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">simulate_lm</span><span class="p">(</span>
+    <span class="mi">500</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">coef_vals</span><span class="o">=</span><span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="o">-</span><span class="mf">40.1</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">mus</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">noise_params</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;True coefficients: </span><span class="si">{b}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>Here are some checks you might do to make sure the data correctly generated:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check mean of predictors</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+
+<span class="c1"># Check correlations between predictors</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">corr</span><span class="p">())</span>
+
+<span class="c1"># Check coefficient recovery</span>
+<span class="kn">from</span> <span class="nn">pymer4.models</span> <span class="k">import</span> <span class="n">Lm</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">Lm</span><span class="p">(</span><span class="s1">&#39;DV ~ IV1+IV2+IV3&#39;</span><span class="p">,</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">summarize</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">coefs</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>However, you have the option of being as general or specific as possible when generating data. For example let’s generate 100 observations with 5 predictors from a standard normal distribution, i.e. mean = 0, sd = 1 with no (random) correlations between predictors, and let <code class="code docutils literal notranslate"><span class="pre">pymer4</span></code> decide what to set the coefficient values to.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">simulate_lm</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="generating-multi-level-regression-data">
+<h2>Generating multi-level regression data<a class="headerlink" href="#generating-multi-level-regression-data" title="Permalink to this headline">¶</a></h2>
+<p>Generating data for a multi-level regression is just as simple and returns a pandas dataframe with outcome and predictor variables ready for use with <code class="code docutils literal notranslate"><span class="pre">Lmer()</span></code>, another dataframe with group/cluster level estimates (i.e. BLUPs), and a vector of population-level coefficients.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Here&#39;s an example generating 5000 observations, organized as 100 groups with 50 observations each. We&#39;ll have three predictors with the values: 1.8, -2, and 10. We also have an intercept with a value of 4. The means of the columns of our design matrix (i.e. means of the predictors) will be: 10, 30, and 2. We&#39;ll also introduce correlations between our predictors of r = .15. We&#39;ll leave the default of standard normal noise i.e., mean = 0, and sd = 1.</span>
+
+<span class="kn">from</span> <span class="nn">pymer4.simulate</span> <span class="k">import</span> <span class="n">simulate_lmm</span>
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.000 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-examples-03-simulating-data-py">
+<div class="sphx-glr-download docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/8daec4b3f46da999e52ffd8e78bcd3f5/examples_03_simulating_data.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">examples_03_simulating_data.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/82827fc21be92cf912fb9cafa6093390/examples_03_simulating_data.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">examples_03_simulating_data.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Eshin Jolly
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
