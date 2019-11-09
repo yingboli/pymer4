@@ -1,243 +1,185 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>pymer4 Usage Examples &mdash; pymer4 0.2.0 documentation</title>
-  
 
-  
-  
-  
-  
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Usage Guide &#8212; pymer4 0.7.0 documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="1. Basic Usage Guide" href="example_01_basic_usage.html" />
+    <link rel="prev" title="What’s New" href="../new.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
 
-  
+  </head><body>
 
-  
-  
-    
+  <div id="navbar" class="navbar navbar-inverse navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html">
+          Pymer4</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.7.0</b></span>
+      </div>
 
-  
-
-  
-  
-    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  
-
-  
-    <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
-  
-
-  
-        <link rel="index" title="Index"
-              href="../genindex.html"/>
-        <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="pymer4 0.2.0 documentation" href="../index.html"/> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
-</head>
-
-<body class="wy-body-for-nav" role="document">
-
-   
-  <div class="wy-grid-for-nav">
-
-    
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
-            <a href="../index.html" class="icon icon-home"> pymer4
-          
-
-          
-          </a>
-
-          
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="#">Tutorial</a></li>
+                <li><a href="../api.html">API</a></li>
+                <li><a href="https://github.com/ejolly/pymer4">Github</a></li>
             
             
-              <div class="version">
-                0.2.0
-              </div>
-            
-          
-
-          
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Nav <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../features.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../new.html">What's New</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../rfx_cheatsheet.html">Lme4 RFX Cheatsheet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../citation.html">Citation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">TOC <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Usage Guide</a><ul>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
               
             
             
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="../api.html">API Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api.html#pymer4-models-model-classes"><code class="docutils literal"><span class="pre">pymer4.models</span></code>: Model Classes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api.html#module-pymer4.utils"><code class="docutils literal"><span class="pre">pymer4.utils</span></code>: Utilities</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../usage.html#continuous-predictor-variables-only">Continuous Predictor Variables Only</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../usage.html#categorical-predictor-variables">Categorical Predictor Variables</a></li>
-</ul>
-
             
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
           
         </div>
-      </div>
-    </nav>
+    </div>
+  </div>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">pymer4</a>
-        
-      </nav>
-
-
-      
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
-  <ul class="wy-breadcrumbs">
-    
-      <li><a href="../index.html">Docs</a> &raquo;</li>
-        
-      <li>pymer4 Usage Examples</li>
-    
-    
-      <li class="wy-breadcrumbs-aside">
-        
-            
-            <a href="../_sources/auto_examples/index.rst.txt" rel="nofollow"> View page source</a>
-          
-        
-      </li>
-    
-  </ul>
-
-  
-  <hr/>
+  <div class="section" id="usage-guide">
+<span id="sphx-glr-auto-examples"></span><h1>Usage Guide<a class="headerlink" href="#usage-guide" title="Permalink to this headline">¶</a></h1>
+<p>Usage examples:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="code docutils literal notranslate"><span class="pre">print()</span></code> statements in the examples below are only so these docs render at this site. They are not required for actual usage.</p>
+<p>Sometimes using <code class="docutils literal notranslate"><span class="pre">pymer4</span></code> interactively can cause the Python kernel to crash. This is more likely to happen if you have multiple interactive sessions running simulatenously. One way around this is to put this at the top of your notebook/code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;KMP_DUPLICATE_LIB_OK&#39;</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;True&#39;</span>
+</pre></div>
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-            
-  <div class="section" id="pymer4-usage-examples">
-<h1>pymer4 Usage Examples<a class="headerlink" href="#pymer4-usage-examples" title="Permalink to this headline">¶</a></h1>
-<div class="sphx-glr-thumbcontainer" tooltip="This tutorial illustrates how to estimate a simple model with one continuous predictor. We&#x27;re g..."><div class="figure" id="id1">
-<img alt="../_images/sphx_glr_basic_usage_thumb.png" src="../_images/sphx_glr_basic_usage_thumb.png" />
-<p class="caption"><span class="caption-text"><a class="reference internal" href="basic_usage.html#sphx-glr-auto-examples-basic-usage-py"><span class="std std-ref">Basic Usage</span></a></span></p>
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="1"><div class="figure align-default" id="id1">
+<img alt="../_images/sphx_glr_example_01_basic_usage_thumb.png" src="../_images/sphx_glr_example_01_basic_usage_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="example_01_basic_usage.html#sphx-glr-auto-examples-example-01-basic-usage-py"><span class="std std-ref">1. Basic Usage Guide</span></a></span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
 </div>
 </div><div class="toctree-wrapper compound">
 </div>
-<div style='clear:both'></div><div class="sphx-glr-footer docutils container">
-<div class="sphx-glr-download docutils container">
-<a class="reference download internal" href="../_downloads/auto_examples_python.zip" download=""><code class="xref download docutils literal"><span class="pre">Download</span> <span class="pre">all</span> <span class="pre">examples</span> <span class="pre">in</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">auto_examples_python.zip</span></code></a></div>
-<div class="sphx-glr-download docutils container">
-<a class="reference download internal" href="../_downloads/auto_examples_jupyter.zip" download=""><code class="xref download docutils literal"><span class="pre">Download</span> <span class="pre">all</span> <span class="pre">examples</span> <span class="pre">in</span> <span class="pre">Jupyter</span> <span class="pre">notebooks:</span> <span class="pre">auto_examples_jupyter.zip</span></code></a></div>
+<div class="sphx-glr-thumbcontainer" tooltip="2"><div class="figure align-default" id="id2">
+<img alt="../_images/sphx_glr_example_02_categorical_thumb.png" src="../_images/sphx_glr_example_02_categorical_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="example_02_categorical.html#sphx-glr-auto-examples-example-02-categorical-py"><span class="std std-ref">2. Categorical Predictors</span></a></span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
 </div>
-<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.readthedocs.io">Gallery generated by Sphinx-Gallery</a></p>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="3"><div class="figure align-default" id="id3">
+<img alt="../_images/sphx_glr_example_03_posthoc_thumb.png" src="../_images/sphx_glr_example_03_posthoc_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="example_03_posthoc.html#sphx-glr-auto-examples-example-03-posthoc-py"><span class="std std-ref">3. ANOVA tables and post-hoc comparisons</span></a></span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="pymer4 gives you a lot of control over what you want your data to look like by setting properti..."><div class="figure align-default" id="id4">
+<img alt="../_images/sphx_glr_example_04_simulating_data_thumb.png" src="../_images/sphx_glr_example_04_simulating_data_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="example_04_simulating_data.html#sphx-glr-auto-examples-example-04-simulating-data-py"><span class="std std-ref">4. Simulating Data</span></a></span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="toctree-wrapper compound">
+</div>
+<div class="sphx-glr-thumbcontainer" tooltip="5"><div class="figure align-default" id="id5">
+<img alt="../_images/sphx_glr_example_05_misc_stats_thumb.png" src="../_images/sphx_glr_example_05_misc_stats_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="example_05_misc_stats.html#sphx-glr-auto-examples-example-05-misc-stats-py"><span class="std std-ref">5. Additional Statistics Functions</span></a></span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="toctree-wrapper compound">
+</div>
+<div style='clear:both'></div><div class="sphx-glr-footer class sphx-glr-footer-gallery docutils container">
+<div class="sphx-glr-download docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/ad1a56e870ef2c276ef0b60ae9b0f210/auto_examples_python.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">all</span> <span class="pre">examples</span> <span class="pre">in</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">auto_examples_python.zip</span></code></a></p>
+</div>
+<div class="sphx-glr-download docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/560c22e1de71221e7258f83077bc191b/auto_examples_jupyter.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">all</span> <span class="pre">examples</span> <span class="pre">in</span> <span class="pre">Jupyter</span> <span class="pre">notebooks:</span> <span class="pre">auto_examples_jupyter.zip</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
 </div>
 
 
-           </div>
-           <div class="articleComments">
-            
-           </div>
-          </div>
-          <footer>
-  
-
-  <hr/>
-
-  <div role="contentinfo">
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
     <p>
-        &copy; Copyright 2017, Eshin Jolly.
-
+        &copy; Copyright 2017-2019, Eshin Jolly.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.<br/>
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
-
 </footer>
-
-        </div>
-      </div>
-
-    </section>
-
-  </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'0.2.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
-      jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
-      });
-  </script>
-   
-
-</body>
+  </body>
 </html>

@@ -1,441 +1,161 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Pymer4 &mdash; pymer4 0.6.0 documentation</title>
-  
 
-  
-  
-  
-  
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Pymer4 &#8212; pymer4 0.7.0 documentation</title>
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/gallery.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Features" href="features.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="_static/bootstrap-sphinx.js "></script>
 
-  
+  </head><body>
 
-  
-  
-    
+  <div id="navbar" class="navbar navbar-inverse navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">
+          Pymer4</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.7.0</b></span>
+      </div>
 
-  
-
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="genindex.html"/>
-        <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="pymer4 0.6.0 documentation" href="#"/>
-        <link rel="next" title="Basic Usage Guide" href="usage.html"/> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
-</head>
-
-<body class="wy-body-for-nav" role="document">
-
-   
-  <div class="wy-grid-for-nav">
-
-    
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
-            <a href="#" class="icon icon-home"> pymer4
-          
-
-          
-          </a>
-
-          
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="auto_examples/index.html">Tutorial</a></li>
+                <li><a href="api.html">API</a></li>
+                <li><a href="https://github.com/ejolly/pymer4">Github</a></li>
             
             
-              <div class="version">
-                0.6.0
-              </div>
-            
-          
-
-          
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Nav <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="features.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="new.html">What's New</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rfx_cheatsheet.html">Lme4 RFX Cheatsheet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="citation.html">Citation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">TOC <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Pymer4</a></li>
+</ul>
+</ul>
+</li>
               
             
             
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="usage.html">Basic Usage Guide</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="categorical.html">Categorical Predictors</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="post_hoc.html">ANOVA tables and post-hoc comparisons</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="simulate.html">Simulating Data</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="rfx_cheatsheet.html">Lme4 Random Effects Cheat Sheet</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html#pymer4-models-model-classes"><code class="docutils literal notranslate"><span class="pre">pymer4.models</span></code>: Model Classes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html#module-pymer4.simulate"><code class="docutils literal notranslate"><span class="pre">pymer4.simulate</span></code>: Simulation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html#module-pymer4.utils"><code class="docutils literal notranslate"><span class="pre">pymer4.utils</span></code>: Utilities</a></li>
-</ul>
-
             
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
           
         </div>
-      </div>
-    </nav>
+    </div>
+  </div>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="#">pymer4</a>
-        
-      </nav>
-
-
-      
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
-  <ul class="wy-breadcrumbs">
-    
-      <li><a href="#">Docs</a> &raquo;</li>
-        
-      <li>Pymer4</li>
-    
-    
-      <li class="wy-breadcrumbs-aside">
-        
-            
-            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
-          
-        
-      </li>
-    
-  </ul>
-
-  
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-            
   <div class="section" id="pymer4">
 <h1>Pymer4<a class="headerlink" href="#pymer4" title="Permalink to this headline">¶</a></h1>
-<p>Love multi-level-modeling using <a class="reference external" href="https://cran.r-project.org/web/packages/lme4/index.html">lme4</a> in R, but prefer to work in the scientific Python ecosystem? This package has got you covered! It’s a small convenience package wrapping the basic functionality of lme4 for compatibility with python.</p>
-<p>This package’s main purpose is to provide a clean interface that hides the back-and-forth code required when moving between R and Python. In other words a user can work completely in Python, never having to deal with R, but get (most) of lme4’s goodness. Behind the scenes this package simply uses <a class="reference external" href="https://rpy2.readthedocs.io/en/version_2.8.x/">rpy2</a> to pass objects between languages, compute what’s needed, parse everything, and convert to Python types (e.g. numpy arrays, pandas dataframes, etc).</p>
-<p>This package can also fit standard regression models with a few extra bells and whistles compared to R’s <code class="code docutils literal notranslate"><span class="pre">lm()</span></code> (<em>Currently this only includes linear models</em>)</p>
-<p>TL;DR This package is your new <em>simple</em> Pythonic drop-in replacement for <code class="code docutils literal notranslate"><span class="pre">lm()</span></code> or <code class="code docutils literal notranslate"><span class="pre">glmer()</span></code> in R.</p>
-<p><a class="reference external" href="https://github.com/ejolly/pymer4">Github Repo Source</a></p>
-<p>If you use this software please cite as:
-Jolly, (2018). Pymer4: Connecting R and Python for Linear Mixed Modeling. <em>Journal of Open Source Software</em>, 3(31), 862, <a class="reference external" href="https://doi.org/10.21105/joss.00862">https://doi.org/10.21105/joss.00862</a></p>
-<div class="section" id="features">
-<h2>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h2>
-<p>This package has some extra goodies to make life a bit easier, namely:</p>
-<ul>
-<li><p class="first">For multi-level models (i.e. <code class="code docutils literal notranslate"><span class="pre">glmer()</span></code>):</p>
-<blockquote>
-<div><ul class="simple">
-<li>Automatic inclusion of p-values in model output using <a class="reference external" href="https://cran.r-project.org/web/packages/lmerTest/index.html">lmerTest</a></li>
-<li>Automatic inclusion of confidence intervals in model output</li>
-<li>Automatic conversion and calculation of <em>odds-ratios</em> and <em>probabilities</em> for logit models</li>
-<li>Easy access to model fits, residuals, and random effects as pandas dataframes</li>
-<li>Random effects plotting using seaborn</li>
-<li>Easy post-hoc tests with multiple-comparisons correction via <a class="reference external" href="https://cran.r-project.org/web/packages/lsmeans/index.html">lsmeans</a></li>
-<li>Easy model predictions on new data</li>
-<li>Easy generation of new data from a fitted model</li>
-<li>Optional p-value computation via within cluster permutation testing (experimental)</li>
-</ul>
-</div></blockquote>
-</li>
-<li><p class="first">For standard linear models (i.e. <code class="code docutils literal notranslate"><span class="pre">lm()</span></code>)</p>
-<blockquote>
-<div><ul class="simple">
-<li>Automatic inclusion of confidence intervals in model output</li>
-<li>Easy computation of empirically bootstrapped 95% confidence intervals</li>
-<li>Easy computation of cluster-robust, heteroscedasticity-robust or auto-correlation-robust, ‘sandwich estimators’ for standard errors (<em>note: these are not the same as auto-regressive models</em>)</li>
-<li>Permutation tests on model parameters</li>
-</ul>
-</div></blockquote>
-</li>
-<li><p class="first">Data simulation</p>
-<blockquote>
-<div><ul class="simple">
-<li>Highly customizable functions for generating data useful for standard regression models and multi-level models</li>
-</ul>
-</div></blockquote>
-</li>
-<li><p class="first">Data visualization</p>
-<blockquote>
-<div><ul class="simple">
-<li>Convenience methods for plotting model estimates, including random-effects terms</li>
-</ul>
-</div></blockquote>
-</li>
-</ul>
-</div>
-<div class="section" id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
-<p><code class="code docutils literal notranslate"><span class="pre">pymer4</span></code> since version 0.6.0 is only compatible with Python 3. Versions 0.5.0 and lower will work with Python 2, but will not contain any new features. <code class="code docutils literal notranslate"><span class="pre">pymer4</span></code> also requires a working R installation with specific packages installed and it will <em>not</em> install R or these packages for you. However, you can follow either option below to easily handle these dependencies.</p>
-<div class="section" id="option-1-simpler-but-slower-model-fitting">
-<h3>Option 1 (simpler but slower model fitting)<a class="headerlink" href="#option-1-simpler-but-slower-model-fitting" title="Permalink to this headline">¶</a></h3>
-<p>If you don’t have R installed and you use the Anaconda Python distribution simply run the following commands to have Anaconda install R and the required packages for you. This is fairly painless installation, but model fitting will be slower than if you install R and <code class="docutils literal notranslate"><span class="pre">pymer4</span></code> separately and configure them (option 2).</p>
-<ol class="arabic simple">
-<li><code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">install</span> <span class="pre">-c</span> <span class="pre">conda-forge</span> <span class="pre">r</span> <span class="pre">r-base</span> <span class="pre">r-lmertest</span> <span class="pre">r-lsmeans</span> <span class="pre">rpy2</span></code></li>
-<li><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">pymer4</span></code></li>
-<li>Test the installation to see if it’s working by running <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-c</span> <span class="pre">&quot;from</span> <span class="pre">pymer4.test_install</span> <span class="pre">import</span> <span class="pre">test_install;</span> <span class="pre">test_install()&quot;</span></code></li>
-<li>If there are errors follow the guide below</li>
-</ol>
-</div>
-<div class="section" id="option-2-potentially-trickier-but-faster-model-fitting">
-<h3>Option 2 (potentially trickier, but faster model fitting)<a class="headerlink" href="#option-2-potentially-trickier-but-faster-model-fitting" title="Permalink to this headline">¶</a></h3>
-<p>This method assumes you already have R installed. If not install first install it from the <a class="reference external" href="https://www.r-project.org/">R Project website</a>. Then complete the following steps:</p>
-<ol class="arabic simple">
-<li>Install the required R packages by running the following command from within R: <code class="docutils literal notranslate"><span class="pre">install.packages(c('lme4','lmerTest','lsmeans'))</span></code></li>
-<li>Install pymer4 by running the following command in a terminal: <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">pymer4</span></code></li>
-<li>Test the installation to see if it’s working by running the following command in a terminal: <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-c</span> <span class="pre">&quot;from</span> <span class="pre">pymer4.test_install</span> <span class="pre">import</span> <span class="pre">test_install;</span> <span class="pre">test_install()&quot;</span></code></li>
-<li>If there are errors follow the guide below</li>
-</ol>
-</div>
-<div class="section" id="install-issues">
-<h3>Install issues<a class="headerlink" href="#install-issues" title="Permalink to this headline">¶</a></h3>
-<p>Some users have issues installing <code class="docutils literal notranslate"><span class="pre">pymer4</span></code> on recent versions of macOS. This is due to compiler issues that give <code class="docutils literal notranslate"><span class="pre">rpy2</span></code> (a package dependency of <code class="docutils literal notranslate"><span class="pre">pymer4</span></code>) some issues during install. Here’s a fix that should work for that:</p>
-<ol class="arabic">
-<li><p class="first">Install <a class="reference external" href="https://brew.sh/">homebrew</a> if you don’t have it already by running the command at the link (it’s a great pacakage manager for macOS). To check if you already have it, do <code class="docutils literal notranslate"><span class="pre">which</span> <span class="pre">brew</span></code> in your Terminal. If nothing pops up you don’t have it.</p>
-</li>
-<li><p class="first">Fix brew permissions: <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">chown</span> <span class="pre">-R</span> <span class="pre">$(whoami)</span> <span class="pre">$(brew</span> <span class="pre">--prefix)/*</span></code> (this is <strong>necessary</strong> on macOS Sierra or higher (&gt;= macOS 10.12))</p>
-</li>
-<li><p class="first">Update homebrew <code class="docutils literal notranslate"><span class="pre">brew</span> <span class="pre">update</span></code></p>
-</li>
-<li><p class="first">Install the xz uitility <code class="docutils literal notranslate"><span class="pre">brew</span> <span class="pre">install</span> <span class="pre">xz</span></code></p>
-</li>
-<li><p class="first">At this point you can try to re-install <code class="docutils literal notranslate"><span class="pre">pymer4</span></code> and re-test the installation. If it still doesn’t work follow the next few steps below</p>
-</li>
-<li><p class="first">Install an updated compiler: <code class="docutils literal notranslate"><span class="pre">brew</span> <span class="pre">install</span> <span class="pre">gcc</span></code>, or if you have homebrew already, <code class="docutils literal notranslate"><span class="pre">brew</span> <span class="pre">upgrade</span> <span class="pre">gcc</span></code></p>
-</li>
-<li><p class="first">Enable the new compiler for use:</p>
-<blockquote>
-<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">CC</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>find <span class="sb">`</span>brew info gcc <span class="p">|</span> grep usr <span class="p">|</span> sed <span class="s1">&#39;s/(.*//&#39;</span> <span class="p">|</span> awk <span class="s1">&#39;{printf $1&quot;/bin&quot;}&#39;</span><span class="sb">`</span> -name <span class="s1">&#39;x86*gcc-?&#39;</span><span class="k">)</span><span class="s2">&quot;</span>
-<span class="nb">export</span> <span class="nv">CFLAGS</span><span class="o">=</span><span class="s2">&quot;-W&quot;</span>
-</pre></div>
-</div>
-</div></blockquote>
-</li>
-<li><p class="first">If the above results in any error output (it should return nothing) you might need to manually find out where the new compiler is installed. To do so use <code class="docutils literal notranslate"><span class="pre">brew</span> <span class="pre">info</span> <span class="pre">gcc</span></code> and <code class="docutils literal notranslate"><span class="pre">cd</span></code> into the directory that begins with <code class="docutils literal notranslate"><span class="pre">/usr</span></code> in the output of that command. From there <code class="docutils literal notranslate"><span class="pre">cd</span></code> into <code class="docutils literal notranslate"><span class="pre">bin</span></code> and look for a file that begins with <code class="docutils literal notranslate"><span class="pre">x86</span></code> and ends with <code class="docutils literal notranslate"><span class="pre">gcc-7</span></code>. It’s possible that the directory ends with <code class="docutils literal notranslate"><span class="pre">gcc-8</span></code> or a higher number based on how recently you installed from homebrew. In that case, just use the latest version. Copy the <em>full path</em> to that file and run the following:</p>
-<blockquote>
-<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">CC</span><span class="o">=</span> pathYouCopiedInQuotes
-<span class="nb">export</span> <span class="nv">CFLAGS</span><span class="o">=</span><span class="s2">&quot;-W&quot;</span>
-</pre></div>
-</div>
-</div></blockquote>
-</li>
-<li><p class="first">Finally install <code class="docutils literal notranslate"><span class="pre">rpy2</span></code> using the new compiler you just installed: <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">install</span> <span class="pre">-c</span> <span class="pre">conda-forge</span> <span class="pre">rpy2</span></code> if you followed Option 1 above or <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">rpy2</span></code> if you followed Option 2</p>
-</li>
-<li><p class="first">Now you should be able to <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">pymer4</span></code> :)</p>
-</li>
-</ol>
-</div>
-</div>
-<div class="section" id="basic-usage-guide">
-<h2>Basic Usage Guide<a class="headerlink" href="#basic-usage-guide" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="usage.html">Basic Usage Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#estimate-a-standard-regression-model">Estimate a standard regression model</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#estimate-a-multi-level-model">Estimate a multi-level model</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#visualize-model-summary">Visualize model summary</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#inspect-random-effects">Inspect random effects</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#inspect-other-attributes">Inspect other attributes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#inspect-overall-fit">Inspect overall fit</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
-<div class="section" id="categorical-predictors">
-<h2>Categorical Predictors<a class="headerlink" href="#categorical-predictors" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="categorical.html">Categorical Predictors</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="categorical.html#standard-regression-models">Standard Regression Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="categorical.html#multi-level-models">Multi-level Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="categorical.html#dummy-coding-factors">Dummy coding factors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="categorical.html#polynomial-contrast-coding">Polynomial contrast coding</a></li>
-<li class="toctree-l2"><a class="reference internal" href="categorical.html#custom-contrasts">Custom contrasts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="categorical.html#simpler-custom-contrasts">(Simpler) Custom contrasts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="categorical.html#how-contrasts-in-r-work">How contrasts in R work</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
-<div class="section" id="post-hoc-comparisons">
-<h2>Post-hoc Comparisons<a class="headerlink" href="#post-hoc-comparisons" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="post_hoc.html">ANOVA tables and post-hoc comparisons</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="post_hoc.html#anova-tables-and-orthogonal-contrasts">ANOVA tables and orthogonal contrasts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="post_hoc.html#marginal-estimates-and-post-hoc-comparisons">Marginal estimates and post-hoc comparisons</a></li>
-<li class="toctree-l2"><a class="reference internal" href="post_hoc.html#examples">Examples</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
-<div class="section" id="simulating-data">
-<h2>Simulating Data<a class="headerlink" href="#simulating-data" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="simulate.html">Simulating Data</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="simulate.html#generating-standard-regression-data">Generating standard regression data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="simulate.html#generating-multi-level-regression-data">Generating multi-level regression data</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
-<div class="section" id="lme4-cheatsheet">
-<h2>Lme4 CheatSheet<a class="headerlink" href="#lme4-cheatsheet" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="rfx_cheatsheet.html">Lme4 Random Effects Cheat Sheet</a></li>
-</ul>
-</div>
-</div>
-<div class="section" id="api">
-<h2>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html#pymer4-models-model-classes"><code class="docutils literal notranslate"><span class="pre">pymer4.models</span></code>: Model Classes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html#module-pymer4.simulate"><code class="docutils literal notranslate"><span class="pre">pymer4.simulate</span></code>: Simulation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html#module-pymer4.utils"><code class="docutils literal notranslate"><span class="pre">pymer4.utils</span></code>: Utilities</a></li>
-</ul>
-</div>
-</div>
-</div>
-
-
-           </div>
-           <div class="articleComments">
-            
-           </div>
-          </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="usage.html" class="btn btn-neutral float-right" title="Basic Usage Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
+<a class="reference external image-reference" href="https://travis-ci.org/ejolly/pymer4"><img alt="https://travis-ci.org/ejolly/pymer4.svg?branch=master" src="https://travis-ci.org/ejolly/pymer4.svg?branch=master" /></a>
+<a class="reference external image-reference" href="https://badge.fury.io/py/pymer4"><img alt="https://badge.fury.io/py/pymer4.svg" src="https://badge.fury.io/py/pymer4.svg" /></a>
+<img alt="https://img.shields.io/badge/python-3.6%20%7C%203.7-blue" src="https://img.shields.io/badge/python-3.6%20%7C%203.7-blue" />
+<a class="reference external image-reference" href="https://doi.org/10.21105/joss.00862"><img alt="http://joss.theoj.org/papers/10.21105/joss.00862/status.svg" src="http://joss.theoj.org/papers/10.21105/joss.00862/status.svg" /></a>
+<a class="reference external image-reference" href="https://zenodo.org/record/1523205"><img alt="https://zenodo.org/badge/90598701.svg" src="https://zenodo.org/badge/90598701.svg" /></a>
+<p><code class="code docutils literal notranslate"><span class="pre">pymer4</span></code> is a statistics library for estimating various regression and multi-level models in Python. Love <a class="reference external" href="https://cran.r-project.org/web/packages/lme4/index.html">lme4</a> in R, but prefer to work in the scientific Python ecosystem? This package has got you covered!</p>
+<p><code class="code docutils literal notranslate"><span class="pre">pymer4</span></code> provides a clean interface that hides the back-and-forth code required when moving between R and Python. In other words, you can work completely in Python, never having to deal with R, but get (most) of lme4’s goodness. This is accomplished using <a class="reference external" href="hhttps://rpy2.github.io/doc/latest/html/index.html/">rpy2</a> to interface between langauges.</p>
+<p>Additionally <code class="code docutils literal notranslate"><span class="pre">pymer4</span></code> can fit various additional regression models with some bells, such as robust standard errors, and two-stage regression (summary statistics) models. See the features page for more information.</p>
+<p><strong>TL;DR</strong> This package is your new <em>simple</em> Pythonic drop-in replacement for <code class="code docutils literal notranslate"><span class="pre">lm()</span></code> or <code class="code docutils literal notranslate"><span class="pre">glmer()</span></code> in R.</p>
+<div class="col-md-6">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">Contents</h3>
     </div>
-  
+    <div class="panel-body"><div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="features.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="new.html">What's New</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rfx_cheatsheet.html">Lme4 RFX Cheatsheet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="citation.html">Citation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+</ul>
+</div>
+    </div>
+  </div>
+</div></div>
 
-  <hr/>
 
-  <div role="contentinfo">
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
     <p>
-        &copy; Copyright 2017, Eshin Jolly.
-
+        &copy; Copyright 2017-2019, Eshin Jolly.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.<br/>
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
-
 </footer>
-
-        </div>
-      </div>
-
-    </section>
-
-  </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'0.6.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
-      jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
-      });
-  </script>
-   
-
-</body>
+  </body>
 </html>

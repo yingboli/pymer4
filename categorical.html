@@ -1,187 +1,118 @@
-
-
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Categorical Predictors &mdash; pymer4 0.6.0 documentation</title>
-  
 
-  
-  
-  
-  
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Categorical Predictors &#8212; pymer4 0.7.0 documentation</title>
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/gallery.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="_static/bootstrap-sphinx.js "></script>
 
-  
+  </head><body>
 
-  
-  
-    
+  <div id="navbar" class="navbar navbar-inverse navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          Pymer4</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.7.0</b></span>
+      </div>
 
-  
-
-  
-  
-    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-        <link rel="index" title="Index"
-              href="genindex.html"/>
-        <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="pymer4 0.6.0 documentation" href="index.html"/>
-        <link rel="next" title="ANOVA tables and post-hoc comparisons" href="post_hoc.html"/>
-        <link rel="prev" title="Basic Usage Guide" href="usage.html"/> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
-</head>
-
-<body class="wy-body-for-nav" role="document">
-
-   
-  <div class="wy-grid-for-nav">
-
-    
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
-          
-
-          
-            <a href="index.html" class="icon icon-home"> pymer4
-          
-
-          
-          </a>
-
-          
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="auto_examples/index.html">Tutorial</a></li>
+                <li><a href="api.html">API</a></li>
+                <li><a href="https://github.com/ejolly/pymer4">Github</a></li>
             
             
-              <div class="version">
-                0.6.0
-              </div>
-            
-          
-
-          
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-
-          
-        </div>
-
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="usage.html">Basic Usage Guide</a></li>
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="features.html">Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="citation.html">Citation</a></li>
 </ul>
-<ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Categorical Predictors</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#standard-regression-models">Standard Regression Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#multi-level-models">Multi-level Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#dummy-coding-factors">Dummy coding factors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#polynomial-contrast-coding">Polynomial contrast coding</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#custom-contrasts">Custom contrasts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#simpler-custom-contrasts">(Simpler) Custom contrasts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#how-contrasts-in-r-work">How contrasts in R work</a></li>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page TOC <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Categorical Predictors</a><ul>
+<li><a class="reference internal" href="#standard-regression-models">Standard Regression Models</a></li>
+<li><a class="reference internal" href="#multi-level-models">Multi-level Models</a></li>
+<li><a class="reference internal" href="#dummy-coding-factors">Dummy coding factors</a></li>
+<li><a class="reference internal" href="#polynomial-contrast-coding">Polynomial contrast coding</a></li>
+<li><a class="reference internal" href="#custom-contrasts">Custom contrasts</a></li>
+<li><a class="reference internal" href="#simpler-custom-contrasts">(Simpler) Custom contrasts</a></li>
+<li><a class="reference internal" href="#how-contrasts-in-r-work">How contrasts in R work</a></li>
 </ul>
 </li>
 </ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="post_hoc.html">ANOVA tables and post-hoc comparisons</a></li>
 </ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="simulate.html">Simulating Data</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="rfx_cheatsheet.html">Lme4 Random Effects Cheat Sheet</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="api.html">API Reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html#pymer4-models-model-classes"><code class="docutils literal notranslate"><span class="pre">pymer4.models</span></code>: Model Classes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html#module-pymer4.simulate"><code class="docutils literal notranslate"><span class="pre">pymer4.simulate</span></code>: Simulation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html#module-pymer4.utils"><code class="docutils literal notranslate"><span class="pre">pymer4.utils</span></code>: Utilities</a></li>
-</ul>
-
+</li>
+              
             
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
           
         </div>
-      </div>
-    </nav>
+    </div>
+  </div>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">pymer4</a>
-        
-      </nav>
-
-
-      
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
-  <ul class="wy-breadcrumbs">
-    
-      <li><a href="index.html">Docs</a> &raquo;</li>
-        
-      <li>Categorical Predictors</li>
-    
-    
-      <li class="wy-breadcrumbs-aside">
-        
-            
-            <a href="_sources/categorical.rst.txt" rel="nofollow"> View page source</a>
-          
-        
-      </li>
-    
-  </ul>
-
-  
-  <hr/>
-</div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-            
   <div class="section" id="categorical-predictors">
 <h1>Categorical Predictors<a class="headerlink" href="#categorical-predictors" title="Permalink to this headline">¶</a></h1>
 <p>The syntax for handling categorical predictors is <strong>different</strong> between standard regression models and multi-level models in <code class="code docutils literal notranslate"><span class="pre">pymer4</span></code>. This is because formula parsing is passed to R for multi-level models, but handled by Python for standard regression models. Please note the differences below.</p>
@@ -210,9 +141,9 @@
 <h2>Multi-level Models<a class="headerlink" href="#multi-level-models" title="Permalink to this headline">¶</a></h2>
 <p><code class="code docutils literal notranslate"><span class="pre">Lmer()</span></code> models currently have support for handling categorical predictors in one of three ways based on how R’s <code class="code docutils literal notranslate"><span class="pre">factor()</span></code> works:</p>
 <ol class="arabic simple">
-<li>Dummy-coded factor levels (treatment contrasts) in which each model term is the difference between a factor level and a selected reference level</li>
-<li>Orthogonal polynomial contrasts in which each model term is a polynomial contrast across factor levels (e.g. linear, quadratic, cubic, etc)</li>
-<li>Custom contrasts for each level of a factor, which should be provide in the manner expected by R.</li>
+<li><p>Dummy-coded factor levels (treatment contrasts) in which each model term is the difference between a factor level and a selected reference level</p></li>
+<li><p>Orthogonal polynomial contrasts in which each model term is a polynomial contrast across factor levels (e.g. linear, quadratic, cubic, etc)</p></li>
+<li><p>Custom contrasts for each level of a factor, which should be provide in the manner expected by R.</p></li>
 </ol>
 <p>To make re-parameterizing models easier, factor codings are passed as an argument to a model’s <code class="code docutils literal notranslate"><span class="pre">fit</span></code> method. This obviates the need for adjusting data-frame properties as in R.</p>
 </div>
@@ -252,7 +183,7 @@
 <h2>Custom contrasts<a class="headerlink" href="#custom-contrasts" title="Permalink to this headline">¶</a></h2>
 <p><code class="code docutils literal notranslate"><span class="pre">Lmer()</span></code> models can also take custom factor contrasts based on how they are expected by R. Remember that there can be at most k-1 model terms representing any k level factor without over-parameterizing a model. If all that’s desired is a specific contrast between factor levels (e.g. rather than all possible k-1 contrasts) you have 2 options:</p>
 <ol class="arabic simple">
-<li>Specify a custom contrast using the syntax below (also available in the <code class="code docutils literal notranslate"><span class="pre">model.fit()</span></code> method help). This will guarantee that one of your model terms reflects your desired contrast, and R will generate set of orthogonal contrasts for the rest of your model terms.</li>
+<li><p>Specify a custom contrast using the syntax below (also available in the <code class="code docutils literal notranslate"><span class="pre">model.fit()</span></code> method help). This will guarantee that one of your model terms reflects your desired contrast, and R will generate set of orthogonal contrasts for the rest of your model terms.</p></li>
 </ol>
 <p><strong>Example</strong>
 Compare level ‘1.0’ in ‘IV3’ to the mean of levels ‘0.5’ and ‘1.5’</p>
@@ -262,7 +193,7 @@ Compare level ‘1.0’ in ‘IV3’ to the mean of levels ‘0.5’ and ‘1.5�
 </pre></div>
 </div>
 <ol class="arabic simple" start="2">
-<li>Fit a model with <em>only</em> the desired contrast rather than a full set of k-1 contrasts. Contrary to how statistics is usually taught, you don’t ever <em>have to</em> include a full set of k-1 contrasts for a k level factor! Follow the directions below to do this (section: “simpler” custom contrasts). The upside is you won’t need to rely on R to compute anything for you (aside from the model fit), and you will have a model with exactly the number of terms as contrasts you desire giving you complete control. The downside is that <code class="code docutils literal notranslate"><span class="pre">model.post_hoc()</span></code> methods will not be able to do pairwise comparisons as they rely on R’s internal representation of factor levels.</li>
+<li><p>Fit a model with <em>only</em> the desired contrast rather than a full set of k-1 contrasts. Contrary to how statistics is usually taught, you don’t ever <em>have to</em> include a full set of k-1 contrasts for a k level factor! Follow the directions below to do this (section: “simpler” custom contrasts). The upside is you won’t need to rely on R to compute anything for you (aside from the model fit), and you will have a model with exactly the number of terms as contrasts you desire giving you complete control. The downside is that <code class="code docutils literal notranslate"><span class="pre">model.post_hoc()</span></code> methods will not be able to do pairwise comparisons as they rely on R’s internal representation of factor levels.</p></li>
 </ol>
 </div>
 <div class="section" id="simpler-custom-contrasts">
@@ -293,76 +224,21 @@ Specifying multiple custom contrasts in R has always been a point of confusion a
 </div>
 
 
-           </div>
-           <div class="articleComments">
-            
-           </div>
-          </div>
-          <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-        <a href="post_hoc.html" class="btn btn-neutral float-right" title="ANOVA tables and post-hoc comparisons" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
-      
-      
-        <a href="usage.html" class="btn btn-neutral" title="Basic Usage Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
     </div>
-  
-
-  <hr/>
-
-  <div role="contentinfo">
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
     <p>
-        &copy; Copyright 2017, Eshin Jolly.
-
+        &copy; Copyright 2017-2019, Eshin Jolly.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.<br/>
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
-
 </footer>
-
-        </div>
-      </div>
-
-    </section>
-
-  </div>
-  
-
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'0.6.0',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-  
-
-  
-  
-  <script type="text/javascript">
-      jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
-      });
-  </script>
-   
-
-</body>
+  </body>
 </html>
