@@ -534,6 +534,9 @@ class Lmer(object):
                     odds.ci <- exp(out.ci)
                     colnames(odds.ci) <- c("OR_2.5_ci","OR_97.5_ci")
                     probs.ci <- data.frame(sapply(out.ci,plogis))
+                    if(ncol(probs.ci) == 1){
+                      probs.ci = t(probs.ci)
+                    }
                     colnames(probs.ci) <- c("Prob_2.5_ci","Prob_97.5_ci")
                     out <- cbind(out,odds,odds.ci,probs,probs.ci)
                     list(out,rownames(out))
