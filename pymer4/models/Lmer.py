@@ -382,7 +382,7 @@ class Lmer(object):
                 _fam = self.family
             lmc = robjects.r(f"glmerControl({control})")
             self.model_obj = lmer.glmer(
-                self.formula, data=dat, family=_fam, REML=REML, control=lmc
+                self.formula, data=dat, family=_fam, control=lmc
             )
         
         # Store design matrix and get number of IVs for inference
@@ -589,7 +589,7 @@ class Lmer(object):
                         perm_obj = lmer.lmer(self.formula, data=perm_dat, REML=REML)
                     else:
                         perm_obj = lmer.glmer(
-                            self.formula, data=perm_dat, family=_fam, REML=REML
+                            self.formula, data=perm_dat, family=_fam
                         )
                     perms.append(_return_t(perm_obj))
                 perms = np.array(perms)
